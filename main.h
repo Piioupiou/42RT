@@ -150,7 +150,7 @@ t_vec		*ft_vec(float x, float y, float z);
 t_vec		*vector_add(t_vec *a, t_vec *b);
 t_vec 		*vector_dot_float(float c, t_vec *v1);
 
-float		findinter_sphere(t_ray *fray, t_objet *sphere);
+int 		hitSphere(t_ray *r, t_objet *s, float *t);
 int			findinter_cylinder(t_ray *fray, t_objet *cylinder);
 
 t_ray		*rotation(t_ray *vect, t_objet *object);

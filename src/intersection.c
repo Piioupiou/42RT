@@ -13,25 +13,28 @@
 #include "../main.h"
 #include <stdlib.h>
 
-float		findinter_sphere(t_ray *fray, t_objet *sphere)
+int hitSphere(t_ray *r, t_objet *s, float *t)
 {
-	float    delta;
-	float  a, b, c, tmpa, tmpb, tmpc;
-	t_ray   *ray;
-
-	ray = ft_memalloc(sizeof(t_ray) + 1);
-	ray->o = vector_sub(fray->o, sphere->ori);
-	ray->d = vector_sub(fray->d, sphere->ori);
-	a = ray->d->x - ray->o->x;
-	b = ray->d->y - ray->o->y;
-	c = ray->d->z - ray->o->z;
-	tmpa = pow(a, 2) + pow(b, 2) + pow(c, 2);
-	tmpb = 2.0 * ((ray->o->x * a) + (ray->o->y * b) + (ray->o->z * c));
-	tmpc = pow(ray->o->x, 2) + pow(ray->o->y, 2) + pow(ray->o->z, 2) - pow(sphere->radius, 2);
-	delta = pow(tmpb, 2) - (4 * tmpa * tmpc);
-	if (delta >= 0)
-		return (delta);
-	return (0);
+   // intersection rayon/sphere
+	t_vec *dist = vector_sub(s->ori, r->start); 
+  	float B = vector_dot(r->dir, dist);
+  	float D = B * B - vector_dot(dist, dist) + s->radius * s->radius; 
+  	if (D < 0.0f) 
+  		return (0); 
+   float t0 = B - sqrtf(D); 
+   float t1 = B + sqrtf(D);
+   int retvalue = 0;  
+   if ((t0 > 0.1f) && (t0 < *t)) 
+   {
+     *t = t0;
+     retvalue = 1; 
+   } 
+   if ((t1 > 0.1f) && (t1 < *t)) 
+   {
+     *t = t1; 
+     retvalue = 1; 
+   }
+  return retvalue;
 }
 
 int		findinter_cylinder(t_ray *fray, t_objet *cylinder)
