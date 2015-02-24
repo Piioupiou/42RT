@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/31 00:50:58 by acrosnie          #+#    #+#             */
-/*   Updated: 2014/02/14 12:07:35 by acrosnie         ###   ########.fr       */
+/*   Updated: 2015/02/24 21:11:12 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void display(t_data *d)
 			ray.dir = ft_vec(0.0, 0.0, 1.0f);
 			while ((coef > 0) && (level < 10))
 			{
-				float t = 20000.0f;
+				float t = 20.0f;
 				currentSphere = collidSphere(d, &t, &ray);
 				if (currentSphere == -1)
 					break;
@@ -165,6 +165,13 @@ int		expose(t_data *d)
 	return (0);
 }
 
+int			send_key(int key)
+{
+	if (key == 65307)
+		exit(0);
+	return (0);
+}
+
 void		rtv1(t_data data)
 {
 	data.n = 0;
@@ -173,6 +180,7 @@ void		rtv1(t_data data)
 	init(&data);
 	display(&data);
 	mlx_expose_hook(data.win, expose, &data);
+	mlx_key_hook(data.win, send_key, "");
 	mlx_loop(data.ptr);
 }
 
