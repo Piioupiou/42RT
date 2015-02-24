@@ -59,10 +59,26 @@ int			checkfoundray(t_ray *ray, t_objet *cylinder)
 	return (0);
 }
 
+int collidSphere(t_data *d, float *t, t_ray *ray)
+{
+	int k;
+	int currentSphere;
+
+	currentSphere = -1;
+	k = -1;
+	while (d->objet[++k])
+	{
+		if (d->objet[k]->type == 1 && hitSphere(ray, d->objet[k], t) == 1)
+			currentSphere = k;
+	}
+	return (currentSphere);
+}
+
 void display(t_data *d)
 {
 	int		x;
 	int		y;
+	int currentSphere;
 	t_color *color;
 
 	t_ray	ray;
@@ -83,13 +99,7 @@ void display(t_data *d)
 			while ((coef > 0) && (level < 10))
 			{
 				float t = 20000.0f;
-				int currentSphere = -1;
-				int k = -1;
-				while (d->objet[++k])
-				{
-					if (d->objet[k]->type == 1 && hitSphere(&ray, d->objet[k], &t) == 1)
-						currentSphere = k;
-				}
+				currentSphere = collidSphere(d, &t, &ray);
 				if (currentSphere == -1)
 					break;
 				t_vec *newStart = vector_add(ray.start, vector_dot_float(t, ray.dir));
