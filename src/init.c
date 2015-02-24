@@ -52,10 +52,10 @@ void	parse(t_data *d)
 			d->cam->fov = ft_atoi(split[1]);
 			camera(d, ft_atoi(split[2]), ft_atoi(split[3]), ft_atoi(split[4]));
 		}
-		if (split[5] && !ft_strcmp("sphere", split[0]))
+		if (split[7] && !ft_strcmp("sphere", split[0]))
 		{
 			vec = ft_vec(ft_atoi(split[1]), ft_atoi(split[2]), ft_atoi(split[3]));
-			sphere(d, vec, ft_atoi(split[4]), ft_atoi(split[5]));
+			sphere(d, vec, ft_atoi(split[4]), createColorRgb(atof(split[5]), atof(split[6]), atof(split[7])));
 		}
 		if (split[9] && !ft_strcmp("cylinder", split[0]))
 		{
@@ -63,6 +63,11 @@ void	parse(t_data *d)
 			vec = ft_vec(ft_atoi(split[1]), ft_atoi(split[2]), ft_atoi(split[3]));
 			vec2 = ft_vec(ft_atoi(split[6]), ft_atoi(split[7]), ft_atoi(split[8]));
 			cylinder(d, vec, vec2, ft_atoi(split[9]));
+		}
+		if (split[7] && !ft_strcmp("light", split[0]))
+		{
+			vec = ft_vec(ft_atoi(split[1]), ft_atoi(split[2]), ft_atoi(split[3]));
+			light(d, vec, ft_atoi(split[4]), createColorRgb(atof(split[5]), atof(split[6]), atof(split[7])));
 		}
 	}
 }

@@ -87,34 +87,93 @@ void display2(t_data *d)
 {
 	int		x;
 	int		y;
+	t_color *color;
 
 	t_ray	ray;
+	t_ray 	lightRay;
 	ray.start = ft_memalloc(sizeof(t_vec));
 	ray.dir = ft_memalloc(sizeof(t_vec));
-	for(y = 0; y < WINDOW_Y; y++)
+	lightRay.start = ft_memalloc(sizeof(t_vec));
+	lightRay.dir = ft_memalloc(sizeof(t_vec));
+	for (y = 0; y < WINDOW_Y; y++)
 	{
-		for(x = 0; x < WINDOW_X; x++)
+		for (x = 0; x < WINDOW_X; x++)
 		{
-			float t = 20000.0f;
-			int currentSphere = -1;
-			int k = -1;
-			//float coef = 1.0f;
-			//int level = 0;
-			ray.start = ft_vec((double)x, (double)y, (double)0);
+			float coef = 1.0f;
+			int level = 0;
+			color = createColorRgb(0, 0, 0);
+			ray.start = ft_vec((float)x, (float)y, (double)-10000.0f);
 			ray.dir = ft_vec(0.0, 0.0, 1.0);
-			while (d->objet[++k])
+			while ((coef > 0.0f) && (level < 10))
 			{
-				if (d->objet[k]->type == 1 && hitSphere(&ray, d->objet[k], t) == 1)
+				float t = 20000.0f;
+				int currentSphere = -1;
+				int k = -1;
+				while (d->objet[++k])
 				{
-					currentSphere = k;
-					pixel_put(d->img[0], x, y, d->objet[currentSphere]->color);
+					if (d->objet[k]->type == 1 && hitSphere(&ray, d->objet[k], t) == 1)
+					{
+						currentSphere = k;
+						//color = d->objet[currentSphere]->color;
+					}
 				}
+				if (currentSphere == -1)
+					break;
+				t_vec *newStart = vector_add(ray.start, vector_dot_float(t, ray.dir));
+		       // la normale au point d'intersection 
+				t_vec *n = vector_sub(newStart, d->objet[currentSphere]->ori);
+				float temp = vector_dot(n, n);
+				if (temp == 0.0f) 
+					break ;
+				temp = 1.0f / sqrtf(temp); 
+				n = vector_dot_float(temp, n);
+				// calcul de la valeur d'éclairement au point 
+				int j = -1;
+				while (d->objet[++j])
+				{
+					if (d->objet[j]->type == 10)
+					{
+						t_vec *dist = vector_sub(d->objet[j]->ori, newStart);
+						if (vector_dot(n, dist) <= 0.0f)
+							continue ;
+						float t = sqrtf(vector_dot(dist, dist));
+						if (t <= 0.0f)
+							continue ;
+						lightRay.start = vector_copy(newStart);
+						lightRay.dir = vector_copy(vector_dot_float((1.0f / t), dist));
+						// calcul des ombres 
+						int inShadow = 0;
+						//int i = -1;
+						// while (d->objet[++i])
+						// {
+						// 	if (d->objet[i]->type == 1 && hitSphere(&lightRay, d->objet[i], t))
+						// 	{
+						//  		inShadow = 1;
+						//  		break ;
+						// 	}
+						//}
+						if (inShadow == 0)
+						{
+							// lambert
+							//float lambert = (vector_dot(lightRay.dir, n)) * coef;
+							float lambert = 1.0f;
+							color->r += lambert * d->objet[j]->color->r * d->objet[currentSphere]->color->r;
+							color->g += lambert * d->objet[j]->color->g * d->objet[currentSphere]->color->g;
+							color->b += lambert * d->objet[j]->color->b * d->objet[currentSphere]->color->b;
+						}
+					}
+				}
+				// on itére sur la prochaine reflexion
+				coef *= 0.5f;
+				float reflet = 2.0f * vector_dot(ray.dir, n);
+				ray.start = newStart;
+				ray.dir = vector_sub(ray.dir, vector_dot_float(reflet, n));
+				level++;
 			}
-			// if (currentSphere == -1)
-			// 	break;
-			// pixel_put(d->img[0], x, y, d->objet[currentSphere]->color);
+			pixel_put(d->img[0], x, y, color);
 		}
 	}
+	printf("done");
 }
 
 void	display(t_data *d)

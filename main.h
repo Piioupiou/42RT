@@ -18,6 +18,14 @@
 # define BUFF_SIZE 1
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
+
+typedef struct                  s_color
+{
+	float		r;
+	float		g;
+	float		b;
+}                               t_color;
 
 typedef struct					s_new_img
 {
@@ -51,12 +59,13 @@ typedef struct					s_ray
 typedef struct					s_objet
 {
 	t_vec			*ori;
+	t_color			*color;
 	float			radius;
-	unsigned long	color;
 	float			anglx;
 	float			angly;
 	float			anglz;
 	float			h;
+	float 			intensity;
 	int				type;
 }								t_objet;
 
@@ -129,13 +138,17 @@ void		background(t_data *data, t_new_img *b);
 void		init(t_data *d);
 void		parse(t_data *d);
 
-void		pixel_put(t_new_img *img, int x, int y, unsigned long color);
+void		pixel_put(t_new_img *img, int x, int y, t_color *color);
+t_color 	*convertColor(unsigned long color);
+t_color 	*createColorRgb(float r, float g, float b);
 
 void		normalize(t_vec *v);
 float		vector_dot(t_vec *a,t_vec *b);
-t_vec		vector_copy(t_vec *a);
+t_vec		*vector_copy(t_vec *a);
 t_vec		*vector_sub(t_vec *a, t_vec *b);
 t_vec		*ft_vec(float x, float y, float z);
+t_vec		*vector_add(t_vec *a, t_vec *b);
+t_vec 		*vector_dot_float(float c, t_vec *v1);
 
 float		findinter_sphere(t_ray *fray, t_objet *sphere);
 int			findinter_cylinder(t_ray *fray, t_objet *cylinder);
@@ -143,9 +156,10 @@ int			findinter_cylinder(t_ray *fray, t_objet *cylinder);
 t_ray		*rotation(t_ray *vect, t_objet *object);
 t_vec		*rotatepoint(t_vec *point, t_rotation *rotation);
 
-void		sphere(t_data *d, t_vec *vec, int rayon, int color);
+void		sphere(t_data *d, t_vec *vec, int rayon, t_color *color);
 void		cylinder(t_data *d, t_vec *vec1, t_vec *vec2, int color);
 void		camera(t_data *d, int x, int y, int z);
 void		cylinder_start(t_data *d, int h, int rad);
+void 		light(t_data *d, t_vec *vec, int intensity, t_color *color);
 
 #endif /*MAIN_H*/
