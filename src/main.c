@@ -59,7 +59,7 @@ int			checkfoundray(t_ray *ray, t_objet *cylinder)
 	return (0);
 }
 
-int hitSphere(t_ray *r, t_objet *s, float t)
+int hitSphere(t_ray *r, t_objet *s, float *t)
 {
    // intersection rayon/sphere
 	t_vec *dist = vector_sub(s->ori, r->start); 
@@ -70,14 +70,14 @@ int hitSphere(t_ray *r, t_objet *s, float t)
    float t0 = B - sqrtf(D); 
    float t1 = B + sqrtf(D);
    int retvalue = 0;  
-   if ((t0 > 0.1f) && (t0 < t)) 
+   if ((t0 > 0.1f) && (t0 < *t)) 
    {
-     t = t0;
+     *t = t0;
      retvalue = 1; 
    } 
-   if ((t1 > 0.1f) && (t1 < t)) 
+   if ((t1 > 0.1f) && (t1 < *t)) 
    {
-     t = t1; 
+     *t = t1; 
      retvalue = 1; 
    }
   return retvalue;
@@ -102,16 +102,16 @@ void display2(t_data *d)
 			float coef = 1.0f;
 			int level = 0;
 			color = createColorRgb(0, 0, 0);
-			ray.start = ft_vec((float)x, (float)y, (double)-10000.0f);
+			ray.start = ft_vec((float)x, (float)y, (float)-20.0f);
 			ray.dir = ft_vec(0.0, 0.0, 1.0);
-			while ((coef > 0.0f) && (level < 10))
+			while ((coef > 0) && (level < 10))
 			{
 				float t = 20000.0f;
 				int currentSphere = -1;
 				int k = -1;
 				while (d->objet[++k])
 				{
-					if (d->objet[k]->type == 1 && hitSphere(&ray, d->objet[k], t) == 1)
+					if (d->objet[k]->type == 1 && hitSphere(&ray, d->objet[k], &t) == 1)
 					{
 						currentSphere = k;
 						//color = d->objet[currentSphere]->color;
@@ -139,24 +139,24 @@ void display2(t_data *d)
 						float t = sqrtf(vector_dot(dist, dist));
 						if (t <= 0.0f)
 							continue ;
-						lightRay.start = vector_copy(newStart);
-						lightRay.dir = vector_copy(vector_dot_float((1.0f / t), dist));
+						lightRay.start = newStart;
+						lightRay.dir = vector_dot_float((1 / t), dist);
 						// calcul des ombres 
 						int inShadow = 0;
-						//int i = -1;
-						// while (d->objet[++i])
-						// {
-						// 	if (d->objet[i]->type == 1 && hitSphere(&lightRay, d->objet[i], t))
-						// 	{
-						//  		inShadow = 1;
-						//  		break ;
-						// 	}
-						//}
+						int i = -1;
+						while (d->objet[++i])
+						{
+							if (d->objet[i]->type == 1 && hitSphere(&lightRay, d->objet[i], &t))
+							{
+						 		inShadow = 1;
+						 		break ;
+							}
+						}
 						if (inShadow == 0)
 						{
 							// lambert
-							//float lambert = (vector_dot(lightRay.dir, n)) * coef;
-							float lambert = 1.0f;
+							float lambert = vector_dot(lightRay.dir, n) * coef;
+							//float lambert = 1.0f;
 							color->r += lambert * d->objet[j]->color->r * d->objet[currentSphere]->color->r;
 							color->g += lambert * d->objet[j]->color->g * d->objet[currentSphere]->color->g;
 							color->b += lambert * d->objet[j]->color->b * d->objet[currentSphere]->color->b;
@@ -170,10 +170,11 @@ void display2(t_data *d)
 				ray.dir = vector_sub(ray.dir, vector_dot_float(reflet, n));
 				level++;
 			}
+			//printf("%d && %d\n", y, x);
 			pixel_put(d->img[0], x, y, color);
 		}
 	}
-	printf("done");
+	printf("done\n");
 }
 
 void	display(t_data *d)

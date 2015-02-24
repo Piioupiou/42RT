@@ -65,5 +65,6 @@ void light(t_data *d, t_vec *vec, int intensity, t_color *color)
 	d->objet[d->n]->intensity = intensity;
 	d->objet[d->n]->color = color;
 	d->objet[d->n]->type = 10;
+	printf("%f, %f, %f\n", d->objet[d->n]->ori->x, d->objet[d->n]->ori->y, d->objet[d->n]->ori->z);
 	d->n++;
 }
