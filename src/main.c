@@ -83,7 +83,7 @@ int hitSphere(t_ray *r, t_objet *s, float *t)
   return retvalue;
 }
 
-void display2(t_data *d)
+void display(t_data *d)
 {
 	int		x;
 	int		y;
@@ -102,7 +102,7 @@ void display2(t_data *d)
 			float coef = 1.0f;
 			int level = 0;
 			color = createColorRgb(0, 0, 0);
-			ray.start = ft_vec((float)x, (float)y, (float)-20.0f);
+			ray.start = ft_vec((float)x, (float)y, (float)-5000.0f);
 			ray.dir = ft_vec(0.0, 0.0, 1.0);
 			while ((coef > 0) && (level < 10))
 			{
@@ -112,10 +112,7 @@ void display2(t_data *d)
 				while (d->objet[++k])
 				{
 					if (d->objet[k]->type == 1 && hitSphere(&ray, d->objet[k], &t) == 1)
-					{
 						currentSphere = k;
-						//color = d->objet[currentSphere]->color;
-					}
 				}
 				if (currentSphere == -1)
 					break;
@@ -156,10 +153,9 @@ void display2(t_data *d)
 						{
 							// lambert
 							float lambert = vector_dot(lightRay.dir, n) * coef;
-							//float lambert = 1.0f;
-							color->r += lambert * d->objet[j]->color->r * d->objet[currentSphere]->color->r;
-							color->g += lambert * d->objet[j]->color->g * d->objet[currentSphere]->color->g;
-							color->b += lambert * d->objet[j]->color->b * d->objet[currentSphere]->color->b;
+							color->r += (lambert * d->objet[j]->color->r * d->objet[currentSphere]->color->r) * d->objet[j]->intensity;
+							color->g += (lambert * d->objet[j]->color->g * d->objet[currentSphere]->color->g) * d->objet[j]->intensity;
+							color->b += (lambert * d->objet[j]->color->b * d->objet[currentSphere]->color->b) * d->objet[j]->intensity;
 						}
 					}
 				}
@@ -170,62 +166,10 @@ void display2(t_data *d)
 				ray.dir = vector_sub(ray.dir, vector_dot_float(reflet, n));
 				level++;
 			}
-			//printf("%d && %d\n", y, x);
 			pixel_put(d->img[0], x, y, color);
 		}
 	}
 	printf("done\n");
-}
-
-void	display(t_data *d)
-{
-	(void)d;
-	// int		x;
-	// int		y;
-	// t_vec	b;
-	// t_vec	dir;
-	// t_ray	ray;
-
-	// ray.o = ft_memalloc(sizeof(t_vec));
-	// ray.d = ft_memalloc(sizeof(t_vec));
-	// y = -1;
-	// while (++y < WINDOW_Y)
-	// {
-	// 	x = -1;
-	// 	while (++x < WINDOW_X)
-	// 	{
-	// 		b.x = x - (WINDOW_X / 2);
-	// 		b.y = y - (WINDOW_Y / 2);
-	// 		b.z = d->cam->f;
-	// 		dir.x = b.x - d->cam->origine->x;
-	// 		dir.y = b.y - d->cam->origine->y;
-	// 		dir.z = b.z - d->cam->origine->z;
-	// 		ray.o->x = d->cam->origine->x;
-	// 		ray.o->y = d->cam->origine->y;
-	// 		ray.o->z = d->cam->origine->z;
-	// 		ray.d->x = x;
-	// 		ray.d->y = y;
-	// 		ray.d->z = 1.0f;
-	// 		int k = -1;
-	// 		double f = 0;
-	// 		//double f2 = 0;
-	// 		while (d->objet[++k])
-	// 		{
-	// 			if (d->objet[k]->type == 1)
-	// 				f = findinter_sphere(&ray, d->objet[k]);
-	// 			// if (d->objet[k]->type == 2)
- //    //                 f = findinter_cylinder(&ray, d->objet[k]);
-	// 			if (f)
-	// 			{
-	// 				// if (!f2 || f > f2)
-	// 				// {
-	// 				// 	f2 = f;
-	// 					pixel_put(d->img[0], x, y, d->objet[k]->color);
-	// 				//}
-	// 			}
-	// 		}
-	// 	}
-	// }
 }
 
 int		expose(t_data *d)
@@ -241,7 +185,7 @@ void		rtv1(t_data data)
 	data.ptr = mlx_init();
 	data.win = mlx_new_window(data.ptr, WINDOW_X, WINDOW_Y, "rtv1");
 	init(&data);
-	display2(&data);
+	display(&data);
 	mlx_expose_hook(data.win, expose, &data);
 	mlx_loop(data.ptr);
 }
