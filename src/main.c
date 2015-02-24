@@ -78,8 +78,8 @@ void display(t_data *d)
 			float coef = 1.0f;
 			int level = 0;
 			color = createColorRgb(0, 0, 0);
-			ray.start = ft_vec((float)x, (float)y, (float)-5000.0f);
-			ray.dir = ft_vec(0.0, 0.0, 1.0);
+			ray.start = ft_vec((float)x + d->cam->origine->x, (float)y + d->cam->origine->y, (float)-5000.0f);
+			ray.dir = ft_vec(0.0, 0.0, 1.0f);
 			while ((coef > 0) && (level < 10))
 			{
 				float t = 20000.0f;

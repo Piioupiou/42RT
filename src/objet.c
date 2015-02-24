@@ -49,9 +49,9 @@ void	cylinder(t_data *d, t_vec *vec1, t_vec *vec2, int color)
 
 void	camera(t_data *d,  int x, int y, int z)
 {
-	d->cam->origine->x = 0;
-	d->cam->origine->y = 0;
-	d->cam->origine->z = 0;
+	d->cam->origine->x = x;
+	d->cam->origine->y = y;
+	d->cam->origine->z = z;
 	d->cam->f = -(WINDOW_X / (2 * tan(d->cam->fov / 2)));
 }
 
