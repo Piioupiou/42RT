@@ -17,8 +17,10 @@
 # define BLOCK 256
 # define BUFF_SIZE 1
 #include <stdio.h>
-#include <math.h>
 #include <stdlib.h>
+#include <fcntl.h>
+#include <mlx.h>
+#include <math.h>
 
 typedef struct                  s_color
 {
@@ -127,11 +129,10 @@ float		square(float nbr);
 void		put_all_image(t_data *data);
 void		img_to_img(t_new_img *s, t_new_img *d);
 
-int			checkfoundray(t_ray *ray, t_objet *cylinder);
-t_ray		*getfoundray(float x1, float x2, float a, float b, float c, t_ray *ray);
 int			expose(t_data *data);
 void		rtv1(t_data data);
 int			main(int ac, char **av);
+int			send_key(int key);
 
 t_new_img	*create_img(t_new_img *i, t_data *d, unsigned long c, int *t);
 void		background(t_data *data, t_new_img *b);
@@ -161,5 +162,11 @@ void		cylinder(t_data *d, t_vec *vec1, t_vec *vec2, int color);
 void		camera(t_data *d, int x, int y, int z);
 void		cylinder_start(t_data *d, int h, int rad);
 void 		light(t_data *d, t_vec *vec, int intensity, t_color *color);
+
+void 		display(t_data *d);
+int 		collidObject(t_data *d, float *t, t_ray *ray);
+t_vec 		*normalObject(t_data *d, int currentObject, t_vec *newStart);
+t_vec 		*calcul_light_shadow(t_data *d, float *t, t_vec *newStart, float *coef, t_color *color, int currentObject);
+void 		calcul_next_iteration(float *coef, t_ray *ray, t_vec *n, t_vec *newStart, int *level);
 
 #endif /*MAIN_H*/
