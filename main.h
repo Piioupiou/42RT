@@ -90,6 +90,8 @@ typedef struct					s_data
 	t_vec			**vec;
 	t_objet			**objet;
 	t_cam			*cam;
+	t_color 		*color;
+	float			coef;
 }								t_data;
 
 typedef struct					s_rotation
@@ -166,7 +168,7 @@ void 		light(t_data *d, t_vec *vec, int intensity, t_color *color);
 void 		display(t_data *d);
 int 		collidObject(t_data *d, float *t, t_ray *ray);
 t_vec 		*normalObject(t_data *d, int currentObject, t_vec *newStart);
-t_vec 		*calcul_light_shadow(t_data *d, float *t, t_vec *newStart, float *coef, t_color *color, int currentObject);
-void 		calcul_next_iteration(float *coef, t_ray *ray, t_vec *n, t_vec *newStart, int *level);
+t_vec 		*calcul_light_shadow(t_data *d, float *t, t_vec *newStart, int currentObject);
+void 		calcul_next_iteration(t_data *d, t_ray *ray, t_vec *n, t_vec *newStart, int *level);
 
 #endif /*MAIN_H*/

@@ -30,23 +30,23 @@ int collidObject(t_data *d, float *t, t_ray *ray)
 	return (current);
 }
 
-void lambertFunctionColor(t_data *d, int j, int currentObject, t_color *color, t_ray lightRay, float *coef, t_vec *n)
+void lambertFunctionColor(t_data *d, int j, int currentObject, t_ray lightRay, t_vec *n)
 {
 	float lambert;
 
-	lambert = vector_dot(lightRay.dir, n) * *coef;
-	color->r += (lambert * d->objet[j]->color->r
+	lambert = vector_dot(lightRay.dir, n) * d->coef;
+	d->color->r += (lambert * d->objet[j]->color->r
 		* d->objet[currentObject]->color->r)
 	* d->objet[j]->intensity;
-	color->g += (lambert * d->objet[j]->color->g
+	d->color->g += (lambert * d->objet[j]->color->g
 		* d->objet[currentObject]->color->g)
 	* d->objet[j]->intensity;
-	color->b += (lambert * d->objet[j]->color->b
+	d->color->b += (lambert * d->objet[j]->color->b
 		* d->objet[currentObject]->color->b)
 	* d->objet[j]->intensity;
 }
 
-t_vec *calcul_light_shadow(t_data *d, float *t, t_vec *newStart, float *coef, t_color *color, int currentObject)
+t_vec *calcul_light_shadow(t_data *d, float *t, t_vec *newStart, int currentObject)
 {
 	int j = -1;
 	t_ray 	lightRay;
@@ -67,7 +67,7 @@ t_vec *calcul_light_shadow(t_data *d, float *t, t_vec *newStart, float *coef, t_
 			lightRay.dir = vector_dot_float((1 / *t), dist);
 			// calcul des ombres 
 			if (collidObject(d, t, &lightRay) == -1)
-				lambertFunctionColor(d, j, currentObject, color, lightRay, coef, n);
+				lambertFunctionColor(d, j, currentObject, lightRay, n);
 		}
 	}
 	return (n);
@@ -84,12 +84,12 @@ t_vec *normalObject(t_data *d, int currentObject, t_vec *newStart)
 	return (n);
 }
 
-void calcul_next_iteration(float *coef, t_ray *ray, t_vec *n, t_vec *newStart, int *level)
+void calcul_next_iteration(t_data *d, t_ray *ray, t_vec *n, t_vec *newStart, int *level)
 {
 	float reflet;
 
 	reflet = 2.0f * vector_dot(ray->dir, n);
-	*coef *= 0.5f;
+	d->coef *= 0.5f;
 	ray->start = newStart;
 	ray->dir = vector_sub(ray->dir, vector_dot_float(reflet, n));
 	level++;
@@ -100,7 +100,6 @@ void display(t_data *d)
 	int		x;
 	int		y;
 	int currentObject;
-	t_color *color;
 	t_vec *n;
 
 	t_ray	ray;
@@ -108,12 +107,12 @@ void display(t_data *d)
 	{
 		for (x = 0; x < WINDOW_X; x++)
 		{
-			float coef = 1.0f;
+			d->coef = 1.0f;
 			int level = 0;
-			color = createColorRgb(0, 0, 0);
+			d->color = createColorRgb(0, 0, 0);
 			ray.start = ft_vec((float)x + d->cam->origine->x, (float)y + d->cam->origine->y, (float)-1000.0f);
 			ray.dir = ft_vec(0.0, 0.0, 1.0f);
-			while ((coef > 0) && (level < 10))
+			while ((d->coef > 0) && (level < 10))
 			{
 				// ray length
 				float t = 20000.0f;
@@ -126,12 +125,12 @@ void display(t_data *d)
 				t_vec *newStart = vector_add(ray.start, vector_dot_float(t, ray.dir));
 
 				// calcul de la valeur d'éclairement au point 
-				if ((n = calcul_light_shadow(d, &t, newStart, &coef, color, currentObject)) == NULL)
+				if ((n = calcul_light_shadow(d, &t, newStart, currentObject)) == NULL)
 					break ;
 				// on itére sur la prochaine reflexion
-				calcul_next_iteration(&coef, &ray, n, newStart, &level);
+				calcul_next_iteration(d, &ray, n, newStart, &level);
 			}
-			pixel_put(d->img[0], x, y, color);
+			pixel_put(d->img[0], x, y, d->color);
 		}
 	}
 	printf("done\n");
