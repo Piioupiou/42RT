@@ -6,21 +6,37 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/04 22:30:34 by acrosnie          #+#    #+#             */
-/*   Updated: 2014/02/14 11:43:53 by acrosnie         ###   ########.fr       */
+/*   Updated: 2015/02/28 05:25:54 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../main.h"
 #include <math.h>
 
-void	normalize(t_vec *v)
+float GetSquareLength(t_vec *v)
 {
-	int		id;
+    return (v->x * v->x + v->y * v->y + v->z * v->z);
+}
 
-	id = 1;
-	v->x = v->x * id;
-	v->y = v->y * id;
-	v->z = v->z * id;
+void    printVec(t_vec *v)
+{
+	printf("x = %f, y = %f, z = %f\n", v->x, v->y, v->z);
+}
+
+float	getMagnitude(t_vec *v)
+{
+	return (sqrtf(v->x * v->x + v->y * v->y + v->z * v->z));
+}
+
+t_vec	*normalize(t_vec *v)
+{
+	int		mag;
+
+	mag = getMagnitude(v);
+	v->x /= mag;
+	v->y /= mag;
+	v->z /= mag;
+	return v;
 }
 
 float	vector_dot(t_vec *a, t_vec *b)
@@ -75,5 +91,16 @@ t_vec	*vector_add(t_vec *a, t_vec *b)
 	v->x = a->x + b->x;
 	v->y = a->y + b->y;
 	v->z = a->z + b->z;
+	return (v);
+}
+
+t_vec	*vector_Vmultiple(t_vec *a, t_vec *b)
+{
+	t_vec	*v;
+
+	v = ft_memalloc(sizeof(t_vec) + 1);
+	v->x = (a->y * b->z) - (a->z * b->y);
+	v->y = (a->z * b->x) - (a->x * b->z);
+	v->z = (a->x * b->y) - (a->y * b->x);
 	return (v);
 }

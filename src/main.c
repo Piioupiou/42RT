@@ -1,12 +1,12 @@
 /* ************************************************************************** */
-/*	                                                                   		  */
+/*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/31 00:50:58 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/02/24 21:11:12 by pgallois         ###   ########.fr       */
+/*   Updated: 2015/02/27 20:37:57 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ void		rtv1(t_data data)
 	data.win = mlx_new_window(data.ptr, WINDOW_X, WINDOW_Y, "rtv1");
 	init(&data);
 	display(&data);
-	mlx_expose_hook(data.win, expose, &data);
 	mlx_key_hook(data.win, send_key, "");
+	mlx_expose_hook(data.win, expose, &data);
 	mlx_loop(data.ptr);
 }
 

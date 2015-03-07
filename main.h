@@ -6,14 +6,14 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/31 00:49:38 by acrosnie          #+#    #+#             */
-/*   Updated: 2014/02/14 11:59:40 by acrosnie         ###   ########.fr       */
+/*   Updated: 2015/02/28 05:53:31 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAIN_H
 # define MAIN_H
-# define WINDOW_X 1080
-# define WINDOW_Y 800
+# define WINDOW_X 640
+# define WINDOW_Y 480
 # define BLOCK 256
 # define BUFF_SIZE 1
 #include <stdio.h>
@@ -67,7 +67,7 @@ typedef struct					s_objet
 	float			angly;
 	float			anglz;
 	float			h;
-	float 			intensity;
+	float			intensity;
 	int				type;
 }								t_objet;
 
@@ -75,7 +75,16 @@ typedef struct					s_cam
 {
 	int			fov;
 	t_vec		*origine;
-	t_vec       *vise;
+	t_vec		*vise;
+	t_vec		*vecDir;
+	t_vec		*vecUp;
+	t_vec		*vecRight;
+	t_vec		*vecUpLeft;
+	float		xIndent;
+	float		yIndent;
+	float		viewplaneWidth;
+	float		viewplaneHeight;
+	float		viewplaneDist;
 	int			f;
 }								t_cam;
 
@@ -90,7 +99,7 @@ typedef struct					s_data
 	t_vec			**vec;
 	t_objet			**objet;
 	t_cam			*cam;
-	t_color 		*color;
+	t_color			*color;
 	float			coef;
 }								t_data;
 
@@ -111,6 +120,9 @@ typedef struct					s_rot
 	float			zx;
 	float			zy;
 }								t_rot;
+
+
+void    printVec(t_vec *v);
 
 int			get_next_line(int const fd, char ** line);
 void		ft_putendl(char const *s);
@@ -142,18 +154,21 @@ void		init(t_data *d);
 void		parse(t_data *d);
 
 void		pixel_put(t_new_img *img, int x, int y, t_color *color);
-t_color 	*convertColor(unsigned long color);
-t_color 	*createColorRgb(float r, float g, float b);
+t_color		*convertColor(unsigned long color);
+t_color		*createColorRgb(float r, float g, float b);
 
-void		normalize(t_vec *v);
+float		GetSquareLength(t_vec *v);
+float		getMagnitude(t_vec *v);
+t_vec		*normalize(t_vec *v);
 float		vector_dot(t_vec *a,t_vec *b);
 t_vec		*vector_copy(t_vec *a);
 t_vec		*vector_sub(t_vec *a, t_vec *b);
 t_vec		*ft_vec(float x, float y, float z);
 t_vec		*vector_add(t_vec *a, t_vec *b);
-t_vec 		*vector_dot_float(float c, t_vec *v1);
+t_vec		*vector_Vmultiple(t_vec *a, t_vec *b);
+t_vec		*vector_dot_float(float c, t_vec *v1);
 
-int 		hitSphere(t_ray *r, t_objet *s, float *t);
+int			hitSphere(t_ray *r, t_objet *s, float *t);
 int			findinter_cylinder(t_ray *fray, t_objet *cylinder);
 
 t_ray		*rotation(t_ray *vect, t_objet *object);
@@ -163,12 +178,12 @@ void		sphere(t_data *d, t_vec *vec, int rayon, t_color *color);
 void		cylinder(t_data *d, t_vec *vec1, t_vec *vec2, int color);
 void		camera(t_data *d, int x, int y, int z);
 void		cylinder_start(t_data *d, int h, int rad);
-void 		light(t_data *d, t_vec *vec, int intensity, t_color *color);
+void		light(t_data *d, t_vec *vec, int intensity, t_color *color);
 
-void 		display(t_data *d);
-int 		collidObject(t_data *d, float *t, t_ray *ray);
-t_vec 		*normalObject(t_data *d, int currentObject, t_vec *newStart);
-t_vec 		*calcul_light_shadow(t_data *d, float *t, t_vec *newStart, int currentObject);
-void 		calcul_next_iteration(t_data *d, t_ray *ray, t_vec *n, t_vec *newStart, int *level);
+void		display(t_data *d);
+int			collidObject(t_data *d, float *t, t_ray *ray);
+t_vec		*normalObject(t_data *d, int currentObject, t_vec *newStart);
+t_vec		*calcul_light_shadow(t_data *d, float *t, t_vec *newStart, int currentObject);
+void		calcul_next_iteration(t_data *d, t_ray *ray, t_vec *n, t_vec *newStart, int *level);
 
 #endif /*MAIN_H*/
