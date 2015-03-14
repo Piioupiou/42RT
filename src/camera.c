@@ -12,43 +12,31 @@
 
 #include "../main.h"
 
-int		expose(t_data *d)
+t_camera	*new_camera(t_vec *p, t_vec *di, t_vec *r, t_vec *dwn)
 {
-	if (d->img)
-	put_all_image(d);
-	return (0);
+	t_camera	*c;
+
+	c = (t_camera*)malloc(sizeof(t_camera));
+	c->campos = p;
+	c->camdir = di;
+	c->camright = r;
+	c->camdown = dwn;
+	return (c);
 }
 
-int			send_key(int key)
-{
-	if (key == 65307)
-		exit(0);
-	return (0);
-}
 
-void		rtv1(t_data data)
+void init_cam(t_data *d, char **split)
 {
-	data.n = 0;
-	data.ptr = mlx_init();
-	data.win = mlx_new_window(data.ptr, WINDOW_X, WINDOW_Y, "rtv1");
-	init(&data);
-	displayTest(&data);
-	mlx_expose_hook(data.win, expose, &data);
-	mlx_key_hook(data.win, send_key, "");
-	mlx_loop(data.ptr);
-}
+	t_camera	*c;
+	t_vec 		*look_at;
+	t_vec		*diff_btw;
 
-int		main(int ac, char **av)
-{
-	t_data	data;
-
-	if (ac > 1)
-	{
-		data.argv = av;
-		if ((data.fd = open(av[1], O_RDONLY)) < 1)
-			return (0);
-		rtv1(data);
-	}
-	rtv1(data);
-	return (0);
+	c = new_camera(NULL, NULL, NULL, NULL);
+	c->campos = ft_vec(atof(split[2]), atof(split[3]), atof(split[4]));
+	look_at = ft_vec(atof(split[5]), atof(split[6]), atof(split[7]));
+	diff_btw = ft_vec(c->campos->x - look_at->x, c->campos->y - look_at->y, c->campos->z - look_at->z);
+	c->camdir = normalize(negative(diff_btw));
+	c->camright = normalize(crossProduct(ft_vec(0, 1, 0), c->camdir));
+	c->camdown = crossProduct(c->camright, c->camdir);
+	d->cam2 = c;
 }

@@ -6,37 +6,44 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/04 22:30:34 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/02/28 05:25:54 by pgallois         ###   ########.fr       */
+/*   Updated: 2014/02/14 11:43:53 by acrosnie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../main.h"
 #include <math.h>
 
-float GetSquareLength(t_vec *v)
+t_vec	*normalize(t_vec *v1)
 {
-    return (v->x * v->x + v->y * v->y + v->z * v->z);
+	t_vec	*v2;
+	float	m;
+
+	m = magnitude(v1);
+	v2 = ft_vec(v1->x / m, v1->y / m, v1->z / m);
+	return (v2);
 }
 
-void    printVec(t_vec *v)
+t_vec	*crossProduct(t_vec *v1, t_vec *v2)
 {
-	printf("x = %f, y = %f, z = %f\n", v->x, v->y, v->z);
+	t_vec	*rslt;
+
+	rslt = ft_vec(v1->y * v2->z - v1->z * v2->y,
+						v1->z * v2->x - v1->x * v2->z,
+						v1->x * v2->y - v1->y * v2->x);
+	return (rslt);
 }
 
-float	getMagnitude(t_vec *v)
+t_vec	*negative(t_vec *v1)
 {
-	return (sqrtf(v->x * v->x + v->y * v->y + v->z * v->z));
+	t_vec	*v2;
+
+	v2 = ft_vec(v1->x * -1, v1->y * -1, v1->z * -1);
+	return (v2);
 }
 
-t_vec	*normalize(t_vec *v)
+float	magnitude(t_vec *v)
 {
-	int		mag;
-
-	mag = getMagnitude(v);
-	v->x /= mag;
-	v->y /= mag;
-	v->z /= mag;
-	return v;
+	return (sqrt((v->x * v->x) + (v->y * v->y) + (v->z * v->z)));
 }
 
 float	vector_dot(t_vec *a, t_vec *b)
@@ -91,16 +98,5 @@ t_vec	*vector_add(t_vec *a, t_vec *b)
 	v->x = a->x + b->x;
 	v->y = a->y + b->y;
 	v->z = a->z + b->z;
-	return (v);
-}
-
-t_vec	*vector_Vmultiple(t_vec *a, t_vec *b)
-{
-	t_vec	*v;
-
-	v = ft_memalloc(sizeof(t_vec) + 1);
-	v->x = (a->y * b->z) - (a->z * b->y);
-	v->y = (a->z * b->x) - (a->x * b->z);
-	v->z = (a->x * b->y) - (a->y * b->x);
 	return (v);
 }

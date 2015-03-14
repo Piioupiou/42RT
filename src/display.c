@@ -1,16 +1,17 @@
 /* ************************************************************************** */
-/*                                                                            */
+/*	                                                                   		  */
 /*                                                        :::      ::::::::   */
-/*   display.c                                          :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgallois <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/02/27 23:34:58 by pgallois          #+#    #+#             */
-/*   Updated: 2015/02/28 06:10:42 by pgallois         ###   ########.fr       */
+/*   Created: 2013/12/31 00:50:58 by acrosnie          #+#    #+#             */
+/*   Updated: 2015/02/24 21:11:12 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../main.h"
+
 
 int collidObject(t_data *d, float *t, t_ray *ray)
 {
@@ -22,12 +23,9 @@ int collidObject(t_data *d, float *t, t_ray *ray)
 	while (d->objet[++k])
 	{
 		if (d->objet[k]->type == 1 && hitSphere(ray, d->objet[k], t) == 1)
-		{
 			current = k;
-			//ft_putendl("HIT !!");
-		}
 		//else if(type == 2 1& hitPlane(ray, d->objet[k], t) == 1)	// plan
-		//current = k
+			//current = k
 	}
 	return (current);
 }
@@ -38,14 +36,14 @@ void lambertFunctionColor(t_data *d, int j, int currentObject, t_ray lightRay, t
 
 	lambert = vector_dot(lightRay.dir, n) * d->coef;
 	d->color->r += (lambert * d->objet[j]->color->r
-			* d->objet[currentObject]->color->r)
-		* d->objet[j]->intensity;
+		* d->objet[currentObject]->color->r)
+	* d->objet[j]->intensity;
 	d->color->g += (lambert * d->objet[j]->color->g
-			* d->objet[currentObject]->color->g)
-		* d->objet[j]->intensity;
+		* d->objet[currentObject]->color->g)
+	* d->objet[j]->intensity;
 	d->color->b += (lambert * d->objet[j]->color->b
-			* d->objet[currentObject]->color->b)
-		* d->objet[j]->intensity;
+		* d->objet[currentObject]->color->b)
+	* d->objet[j]->intensity;
 }
 
 t_vec *calcul_light_shadow(t_data *d, float *t, t_vec *newStart, int currentObject)
@@ -97,23 +95,6 @@ void calcul_next_iteration(t_data *d, t_ray *ray, t_vec *n, t_vec *newStart, int
 	level++;
 }
 
-t_ray	setray(t_data *d, t_ray *ray, int x, int y)
-{
-	t_vec	*tmp1;
-	t_vec	*tmp2;
-	t_vec	*tmp3;
-	t_vec	*tmp4;
-	ray->start = d->cam->origine;
-	tmp1 = vector_dot_float(d->cam->xIndent * (float)x, d->cam->vecRight);
-	tmp2 = vector_dot_float(d->cam->yIndent * (float)y, d->cam->vecUp);
-	tmp3 = vector_sub(tmp1, tmp2);
-	tmp4 = vector_add(d->cam->vecUpLeft, tmp3);
-	ray->dir = vector_sub(tmp4, d->cam->origine);
-	//ray->dir = vector_sub(vector_add(d->cam->vecUpLeft, vector_sub(vector_dot_float((d->cam->xIndent * (float)x), d->cam->vecRight), vector_dot_float((d->cam->yIndent * (float)y), d->cam->vecUp))), d->cam->origine);
-	ray->dir = normalize(ray->dir);
-	return (*ray);
-}
-
 void display(t_data *d)
 {
 	int		x;
@@ -129,34 +110,137 @@ void display(t_data *d)
 			d->coef = 1.0f;
 			int level = 0;
 			d->color = createColorRgb(0, 0, 0);
-			ray = setray(d, &ray, x, y);
-			//ft_putstr("HG : ");
-			//printVec(d->cam->vecUpLeft);
-			//ft_putstr("rayDir : ");
-			//printVec(ray.dir);
-			//ft_putstr("raystart : ");
-			//printVec(ray.start);
-			//ray.start = ft_vec((float)x + d->cam->origine->x, (float)y + d->cam->origine->y, (float)-1000.0f);
-			//ray.dir = ft_vec(0.0, 0.0, 1.0f);
+			ray.start = ft_vec((float)x, (float)y, (float)-10000.0f);
+			ray.dir = ft_vec(0.0, 0.0, 1.0f);
 			while ((d->coef > 0) && (level < 10))
 			{
 				// ray length
-				float t = 1000000.0f;
+				float t = 20000.0f;
 				//collider object
+				{
 				currentObject = collidObject(d, &t, &ray);
+				}
 				if (currentObject == -1)
 					break;
-			pixel_put(d->img[0], x, y, d->objet[1]->color);
-			break;	
-			t_vec *newStart = vector_add(ray.start, vector_dot_float(t, ray.dir));
+				t_vec *newStart = vector_add(ray.start, vector_dot_float(t, ray.dir));
+
 				// calcul de la valeur d'éclairement au point 
 				if ((n = calcul_light_shadow(d, &t, newStart, currentObject)) == NULL)
 					break ;
 				// on itére sur la prochaine reflexion
 				calcul_next_iteration(d, &ray, n, newStart, &level);
 			}
+			pixel_put(d->img[0], x, y, d->color);
 		}
 	}
-	printf("xIndent : %f, yIndent : %f", d->cam->xIndent, d->cam->yIndent);
 	printf("done\n");
+}
+// ----
+
+float	find_sphere_intersection(t_data *d, t_objet *s)
+{
+	float	b;
+	float	c;
+	float	delta;
+	float	rslt;
+
+	b = (2 * (d->ray->start->x - s->ori->x) * d->ray->dir->x) +
+		(2 * (d->ray->start->y - s->ori->y) * d->ray->dir->y) +
+		(2 * (d->ray->start->z - s->ori->z) * d->ray->dir->z);
+	c = pow(d->ray->start->x - s->ori->x, 2) +
+		pow(d->ray->start->y - s->ori->y, 2) +
+		pow(d->ray->start->z - s->ori->z, 2) - (s->radius * s->radius);
+	delta = b * b - 4 * c;
+	if (delta > 0)
+	{
+		rslt = ((-b - sqrt(delta)) / 2) - 0.000001 > 0 ?
+			(-b - sqrt(delta)) / 2 - 0.000001 :
+			(-b + sqrt(delta)) / 2 - 0.000001;
+	}
+	else
+		rslt = -1;
+	return (rslt);
+}
+
+t_ray	*get_ray(t_data *d, float x, float y)
+{
+	t_vec	*v1;
+	t_vec	*v2;
+	t_ray	*ray;
+
+	ray = ft_memalloc(sizeof(t_ray) + 1);
+
+	v1 = vector_dot_float(x - 0.5, d->cam2->camright);
+	v2 = vector_dot_float(y - 0.5, d->cam2->camdown);
+	v1 = vector_add(v1, v2);
+	v1 = vector_add(d->cam2->camdir, v1);
+	v1 = normalize(v1);
+	ray->start = d->cam2->campos;
+	ray->dir = v1;
+	return (ray);
+}
+
+float	get_x_point(int x)
+{
+	float	rslt;
+
+	if (WINDOW_X > WINDOW_Y)
+		rslt = ((x + 0.5) / WINDOW_X) * ASPR - (((WINDOW_X - WINDOW_Y) / (float) WINDOW_Y) / 2);
+	else
+		rslt = (x + 0.5) / (float) WINDOW_X;
+	return (rslt);
+}
+
+float	get_y_point(int y)
+{
+	float	rslt;
+
+	if (WINDOW_Y > WINDOW_X)
+		rslt = ((y + 0.5) / WINDOW_Y) / ASPR - (((WINDOW_Y - WINDOW_X) / (float) WINDOW_X) / 2);
+	else
+		rslt = (y + 0.5) / WINDOW_Y;
+	return (rslt);
+}
+
+void	get_color_at(int x, int y, t_data *d)
+{
+	float		xamnt;
+	float		yamnt;
+
+	xamnt = get_x_point(x);
+	yamnt = get_y_point(y);
+	d->ray = get_ray(d, xamnt, yamnt);
+	// color = get_object_color(d->ray);
+	int k = -1;
+	while (d->objet[++k])
+	{
+		if (d->objet[k]->type == 1)
+		{
+			if (find_sphere_intersection(d, d->objet[k]) != -1)
+			{
+				d->color = d->objet[k]->color;
+			}
+		}
+	}
+}
+
+void displayTest(t_data *d)
+{
+	int		x;
+	int		y;
+
+	x = 0;
+	while (x < WINDOW_X)
+	{
+		y = 0;
+		while (y < WINDOW_Y)
+		{
+			d->color = createColorRgb(0, 0, 0);
+			get_color_at(x, y, d);
+			pixel_put(d->img[0], x, y, d->color);
+			//mlx_put_pixel_to_image(x, y, get_color_number(c));
+			y++;
+		}
+		x++;
+	}
 }

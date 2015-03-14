@@ -47,14 +47,15 @@ void	parse(t_data *d)
 	while (get_next_line(d->fd, &line) == 1)
     {
 		split = ft_strsplit(line, ',');
-		if (split[4] && !ft_strcmp("camera", split[0]))
+		if (split[7] && !ft_strcmp("camera", split[0]))
 		{
-			d->cam->fov = ft_atoi(split[1]);
-			camera(d, ft_atoi(split[2]), ft_atoi(split[3]), ft_atoi(split[4]));
+			init_cam(d, split);
+			//d->cam->fov = ft_atoi(split[1]);
+			//camera(d, ft_atoi(split[2]), ft_atoi(split[3]), ft_atoi(split[4]));
 		}
 		if (split[7] && !ft_strcmp("sphere", split[0]))
 		{
-			vec = ft_vec(ft_atoi(split[1]), ft_atoi(split[2]), ft_atoi(split[3]));
+			vec = ft_vec(atof(split[1]), atof(split[2]), atof(split[3]));
 			sphere(d, vec, ft_atoi(split[4]), createColorRgb(atof(split[5]), atof(split[6]), atof(split[7])));
 		}
 		if (split[9] && !ft_strcmp("cylinder", split[0]))

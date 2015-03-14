@@ -24,7 +24,7 @@ SRC = src/main.c src/image.c src/init.c src/ft_strsplit.c src/get_next_line.c \
 src/ft_strlen.c src/ft_strjoin.c src/ft_putendl.c src/ft_putchar.c \
 src/ft_putstr.c src/ft_memalloc.c src/ft_bzero.c src/ft_strdup.c src/ft_atoi.c \
 src/draw.c src/vecteur.c src/intersection.c src/objet.c src/rotation.c src/ft_strcmp.c \
-src/display.c src/math.c
+src/display.c src/math.c src/camera.c
 
 OBJ = $(SRC:.c=.o)
 
