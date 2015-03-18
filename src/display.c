@@ -13,6 +13,28 @@
 #include "../main.h"
 
 
+float	get_x_point(int x)
+{
+	float	rslt;
+
+	if (WINDOW_X > WINDOW_Y)
+		rslt = ((x + 0.5) / WINDOW_X) * ASPR - (((WINDOW_X - WINDOW_Y) / (float) WINDOW_Y) / 2);
+	else
+		rslt = (x + 0.5) / (float) WINDOW_X;
+	return (rslt);
+}
+
+float	get_y_point(int y)
+{
+	float	rslt;
+
+	if (WINDOW_Y > WINDOW_X)
+		rslt = ((y + 0.5) / WINDOW_Y) / ASPR - (((WINDOW_Y - WINDOW_X) / (float) WINDOW_X) / 2);
+	else
+		rslt = (y + 0.5) / WINDOW_Y;
+	return (rslt);
+}
+
 int collidObject(t_data *d, float *t, t_ray *ray)
 {
 	int k;
@@ -95,6 +117,24 @@ void calcul_next_iteration(t_data *d, t_ray *ray, t_vec *n, t_vec *newStart, int
 	level++;
 }
 
+t_ray	*get_ray(t_data *d, float x, float y)
+{
+	t_vec	*v1;
+	t_vec	*v2;
+	t_ray	*ray;
+
+	ray = ft_memalloc(sizeof(t_ray) + 1);
+
+	v1 = vector_dot_float(x - 0.5, d->cam2->camright);
+	v2 = vector_dot_float(y - 0.5, d->cam2->camdown);
+	v1 = vector_add(v1, v2);
+	v1 = vector_add(d->cam2->camdir, v1);
+	v1 = normalize(v1);
+	ray->start = d->cam2->campos;
+	ray->dir = v1;
+	return (ray);
+}
+
 void display(t_data *d)
 {
 	int		x;
@@ -102,7 +142,7 @@ void display(t_data *d)
 	int currentObject;
 	t_vec *n;
 
-	t_ray	ray;
+	t_ray	*ray;
 	for (y = 0; y < WINDOW_Y; y++)
 	{
 		for (x = 0; x < WINDOW_X; x++)
@@ -110,25 +150,26 @@ void display(t_data *d)
 			d->coef = 1.0f;
 			int level = 0;
 			d->color = createColorRgb(0, 0, 0);
-			ray.start = ft_vec((float)x, (float)y, (float)-10000.0f);
-			ray.dir = ft_vec(0.0, 0.0, 1.0f);
+			// ray.start = ft_vec((float)x, (float)y, (float)-10000.0f);
+			// ray.dir = ft_vec(0.0, 0.0, 1.0f);
+			ray = get_ray(d, get_x_point(x), get_y_point(y));
 			while ((d->coef > 0) && (level < 10))
 			{
 				// ray length
-				float t = 20000.0f;
+				float t = 200000.0f;
 				//collider object
 				{
-				currentObject = collidObject(d, &t, &ray);
+				currentObject = collidObject(d, &t, ray);
 				}
 				if (currentObject == -1)
 					break;
-				t_vec *newStart = vector_add(ray.start, vector_dot_float(t, ray.dir));
+				t_vec *newStart = vector_add(ray->start, vector_dot_float(t, ray->dir));
 
 				// calcul de la valeur d'éclairement au point 
 				if ((n = calcul_light_shadow(d, &t, newStart, currentObject)) == NULL)
 					break ;
 				// on itére sur la prochaine reflexion
-				calcul_next_iteration(d, &ray, n, newStart, &level);
+				calcul_next_iteration(d, ray, n, newStart, &level);
 			}
 			pixel_put(d->img[0], x, y, d->color);
 		}
@@ -159,46 +200,6 @@ float	find_sphere_intersection(t_data *d, t_objet *s)
 	}
 	else
 		rslt = -1;
-	return (rslt);
-}
-
-t_ray	*get_ray(t_data *d, float x, float y)
-{
-	t_vec	*v1;
-	t_vec	*v2;
-	t_ray	*ray;
-
-	ray = ft_memalloc(sizeof(t_ray) + 1);
-
-	v1 = vector_dot_float(x - 0.5, d->cam2->camright);
-	v2 = vector_dot_float(y - 0.5, d->cam2->camdown);
-	v1 = vector_add(v1, v2);
-	v1 = vector_add(d->cam2->camdir, v1);
-	v1 = normalize(v1);
-	ray->start = d->cam2->campos;
-	ray->dir = v1;
-	return (ray);
-}
-
-float	get_x_point(int x)
-{
-	float	rslt;
-
-	if (WINDOW_X > WINDOW_Y)
-		rslt = ((x + 0.5) / WINDOW_X) * ASPR - (((WINDOW_X - WINDOW_Y) / (float) WINDOW_Y) / 2);
-	else
-		rslt = (x + 0.5) / (float) WINDOW_X;
-	return (rslt);
-}
-
-float	get_y_point(int y)
-{
-	float	rslt;
-
-	if (WINDOW_Y > WINDOW_X)
-		rslt = ((y + 0.5) / WINDOW_Y) / ASPR - (((WINDOW_Y - WINDOW_X) / (float) WINDOW_X) / 2);
-	else
-		rslt = (y + 0.5) / WINDOW_Y;
 	return (rslt);
 }
 

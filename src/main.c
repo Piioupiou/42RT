@@ -32,7 +32,7 @@ void		rtv1(t_data data)
 	data.ptr = mlx_init();
 	data.win = mlx_new_window(data.ptr, WINDOW_X, WINDOW_Y, "rtv1");
 	init(&data);
-	displayTest(&data);
+	display(&data);
 	mlx_expose_hook(data.win, expose, &data);
 	mlx_key_hook(data.win, send_key, "");
 	mlx_loop(data.ptr);
