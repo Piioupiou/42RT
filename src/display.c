@@ -156,7 +156,7 @@ void display(t_data *d)
 			while ((d->coef > 0) && (level < 10))
 			{
 				// ray length
-				float t = 200000.0f;
+				float t = 20000.0f;
 				//collider object
 				{
 				currentObject = collidObject(d, &t, ray);
@@ -176,72 +176,4 @@ void display(t_data *d)
 	}
 	printf("done\n");
 }
-// ----
 
-float	find_sphere_intersection(t_data *d, t_objet *s)
-{
-	float	b;
-	float	c;
-	float	delta;
-	float	rslt;
-
-	b = (2 * (d->ray->start->x - s->ori->x) * d->ray->dir->x) +
-		(2 * (d->ray->start->y - s->ori->y) * d->ray->dir->y) +
-		(2 * (d->ray->start->z - s->ori->z) * d->ray->dir->z);
-	c = pow(d->ray->start->x - s->ori->x, 2) +
-		pow(d->ray->start->y - s->ori->y, 2) +
-		pow(d->ray->start->z - s->ori->z, 2) - (s->radius * s->radius);
-	delta = b * b - 4 * c;
-	if (delta > 0)
-	{
-		rslt = ((-b - sqrt(delta)) / 2) - 0.000001 > 0 ?
-			(-b - sqrt(delta)) / 2 - 0.000001 :
-			(-b + sqrt(delta)) / 2 - 0.000001;
-	}
-	else
-		rslt = -1;
-	return (rslt);
-}
-
-void	get_color_at(int x, int y, t_data *d)
-{
-	float		xamnt;
-	float		yamnt;
-
-	xamnt = get_x_point(x);
-	yamnt = get_y_point(y);
-	d->ray = get_ray(d, xamnt, yamnt);
-	// color = get_object_color(d->ray);
-	int k = -1;
-	while (d->objet[++k])
-	{
-		if (d->objet[k]->type == 1)
-		{
-			if (find_sphere_intersection(d, d->objet[k]) != -1)
-			{
-				d->color = d->objet[k]->color;
-			}
-		}
-	}
-}
-
-void displayTest(t_data *d)
-{
-	int		x;
-	int		y;
-
-	x = 0;
-	while (x < WINDOW_X)
-	{
-		y = 0;
-		while (y < WINDOW_Y)
-		{
-			d->color = createColorRgb(0, 0, 0);
-			get_color_at(x, y, d);
-			pixel_put(d->img[0], x, y, d->color);
-			//mlx_put_pixel_to_image(x, y, get_color_number(c));
-			y++;
-		}
-		x++;
-	}
-}
