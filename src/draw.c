@@ -21,6 +21,15 @@ float ft_min(float a, float b)
 	return (a);
 }
 
+float ft_max(float a, float b)
+{
+	if (a > b)
+		return (a);
+	else if(b > a)
+		return (b);
+	return (a);
+}
+
 void	pixel_put(t_new_img *img, int x, int y, t_color *color)
 {
 	img->data[y * img->sizeline + x * img->bits / 8] = (unsigned char)ft_min(color->b * 255.0f, 255.0f);

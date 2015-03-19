@@ -63,6 +63,18 @@ t_vec 	*vector_dot_float(float c, t_vec *v1)
 	return v;
 }
 
+t_vec 	*vector_divise_float(float c, t_vec *v1)
+{
+	t_vec	*v;
+
+	v = ft_memalloc(sizeof(t_vec) + 1);
+
+	v->x = v1->x / c;
+	v->y = v1->y / c;
+	v->z = v1->z / c;
+	return v;
+}
+
 t_vec	*vector_copy(t_vec *a)
 {
 	return (ft_vec(a->x, a->y, a->z));

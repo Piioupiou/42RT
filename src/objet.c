@@ -27,6 +27,24 @@ void	sphere(t_data *d, t_vec *vec, int rayon, t_color *color)
 	d->n++;
 }
 
+void	plane(t_data *d, t_vec *vec, t_vec *vec2, t_color *color)
+{
+
+	d->objet[d->n] = ft_memalloc(sizeof(t_objet));
+	d->objet[d->n]->point = ft_memalloc(sizeof(t_vec));
+	d->objet[d->n]->normal = ft_memalloc(sizeof(t_vec));
+	d->objet[d->n]->point->x = vec->x;
+	d->objet[d->n]->point->y = vec->y;
+	d->objet[d->n]->point->z = vec->z;
+	d->objet[d->n]->normal->x = vec2->x;
+	d->objet[d->n]->normal->y = vec2->y;
+	d->objet[d->n]->normal->z = vec2->z;
+	d->objet[d->n]->color = color;
+	d->objet[d->n]->type = 3;
+	//printf("%f, %f, %f\n", d->objet[d->n]->normal->x, d->objet[d->n]->normal->y, d->objet[d->n]->normal->z);
+	d->n++;
+}
+
 void	cylinder_start(t_data *d, int h, int rad)
 {
 	d->objet[d->n] = ft_memalloc(sizeof(t_objet) + 1);
@@ -48,7 +66,7 @@ void	cylinder(t_data *d, t_vec *vec1, t_vec *vec2, int color)
 	d->n++;
 }
 
-void light(t_data *d, t_vec *vec, int intensity, t_color *color)
+void light(t_data *d, t_vec *vec, float intensity, t_color *color)
 {
 	d->objet[d->n] = ft_memalloc(sizeof(t_objet));
 	d->objet[d->n]->ori = ft_memalloc(sizeof(t_vec));
@@ -58,6 +76,5 @@ void light(t_data *d, t_vec *vec, int intensity, t_color *color)
 	d->objet[d->n]->intensity = intensity;
 	d->objet[d->n]->color = color;
 	d->objet[d->n]->type = 10;
-	printf("%f, %f, %f\n", d->objet[d->n]->ori->x, d->objet[d->n]->ori->y, d->objet[d->n]->ori->z);
 	d->n++;
 }

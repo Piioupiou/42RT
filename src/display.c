@@ -46,6 +46,8 @@ int collidObject(t_data *d, float *t, t_ray *ray)
 	{
 		if (d->objet[k]->type == 1 && hitSphere(ray, d->objet[k], t) == 1)
 			current = k;
+		else if (d->objet[k]->type == 3 && hit_plane(d->objet[k], ray, t) == 1)
+			current = k;
 		//else if(type == 2 1& hitPlane(ray, d->objet[k], t) == 1)	// plan
 			//current = k
 	}
@@ -58,14 +60,24 @@ void lambertFunctionColor(t_data *d, int j, int currentObject, t_ray lightRay, t
 
 	lambert = vector_dot(lightRay.dir, n) * d->coef;
 	d->color->r += (lambert * d->objet[j]->color->r
-		* d->objet[currentObject]->color->r)
-	* d->objet[j]->intensity;
+		* d->objet[currentObject]->color->r) * d->objet[j]->intensity;
 	d->color->g += (lambert * d->objet[j]->color->g
-		* d->objet[currentObject]->color->g)
-	* d->objet[j]->intensity;
+		* d->objet[currentObject]->color->g) * d->objet[j]->intensity;
 	d->color->b += (lambert * d->objet[j]->color->b
-		* d->objet[currentObject]->color->b)
-	* d->objet[j]->intensity;
+		* d->objet[currentObject]->color->b) * d->objet[j]->intensity;
+	t_vec *blinnDir = vector_sub(lightRay.dir, d->ray->dir);
+	float temp = sqrtf(vector_dot(blinnDir, blinnDir));
+	if (temp != 0.0f)
+	{
+		blinnDir = vector_dot_float((1.0f / temp), blinnDir);
+		float blinnTerm = ft_max(vector_dot(blinnDir, n), 0.0f);
+		blinnTerm = 4.0f * powf(blinnTerm , 60) * d->coef;
+		// if (blinnTerm > 1.0f)
+		// 	printf("%f\n", blinnTerm);
+		d->color->r += blinnTerm * d->objet[d->currentObject]->color->r;
+		d->color->g += blinnTerm * d->objet[d->currentObject]->color->g;
+		d->color->b += blinnTerm * d->objet[d->currentObject]->color->b;
+	}
 }
 
 t_vec *calcul_light_shadow(t_data *d, float *t, t_vec *newStart, int currentObject)
@@ -92,17 +104,27 @@ t_vec *calcul_light_shadow(t_data *d, float *t, t_vec *newStart, int currentObje
 				lambertFunctionColor(d, j, currentObject, lightRay, n);
 		}
 	}
+	d->light_ray = &lightRay;
+	d->currentObject = currentObject;
 	return (n);
 }
 
 t_vec *normalObject(t_data *d, int currentObject, t_vec *newStart)
 {
-	t_vec *n = vector_sub(newStart, d->objet[currentObject]->ori);
-	float temp = vector_dot(n, n);
-	if (temp == 0.0f)
-		return (NULL);
-	temp = 1.0f / sqrtf(temp); 
-	n = vector_dot_float(temp, n);
+	t_vec *n = NULL;
+	if (d->objet[currentObject]->type == 1)
+	{
+		n = vector_sub(newStart, d->objet[currentObject]->ori);
+		float temp = vector_dot(n, n);
+		if (temp == 0.0f)
+			return (NULL);
+		temp = 1.0f / sqrtf(temp); 
+		n = vector_dot_float(temp, n);
+	}
+	else if (d->objet[currentObject]->type == 3)
+	{
+		n = d->objet[currentObject]->normalInfo;
+	}
 	return (n);
 }
 
@@ -111,7 +133,7 @@ void calcul_next_iteration(t_data *d, t_ray *ray, t_vec *n, t_vec *newStart, int
 	float reflet;
 
 	reflet = 2.0f * vector_dot(ray->dir, n);
-	d->coef *= 0.5f;
+	d->coef *= 0.25f;
 	ray->start = newStart;
 	ray->dir = vector_sub(ray->dir, vector_dot_float(reflet, n));
 	level++;
@@ -133,6 +155,18 @@ t_ray	*get_ray(t_data *d, float x, float y)
 	ray->start = d->cam2->campos;
 	ray->dir = v1;
 	return (ray);
+}
+
+void gama_exposure(t_data *d)
+{
+	float invgamma = 0.45;
+	d->color->b = powf(d->color->b, invgamma);
+	d->color->r = powf(d->color->r, invgamma);
+	d->color->g = powf(d->color->g, invgamma);
+	float exposure = - 0.66f;
+	d->color->b = 1.0f - expf(d->color->b * exposure);
+	d->color->r = 1.0f - expf(d->color->r * exposure);
+	d->color->g = 1.0f - expf(d->color->g * exposure);
 }
 
 void display(t_data *d)
@@ -163,14 +197,17 @@ void display(t_data *d)
 				}
 				if (currentObject == -1)
 					break;
+				// d->color = createColorRgb(1, 0, 1);
+				// break;
 				t_vec *newStart = vector_add(ray->start, vector_dot_float(t, ray->dir));
-
+				d->ray = ray;
 				// calcul de la valeur d'éclairement au point 
 				if ((n = calcul_light_shadow(d, &t, newStart, currentObject)) == NULL)
 					break ;
 				// on itére sur la prochaine reflexion
 				calcul_next_iteration(d, ray, n, newStart, &level);
 			}
+			gama_exposure(d);
 			pixel_put(d->img[0], x, y, d->color);
 		}
 	}
