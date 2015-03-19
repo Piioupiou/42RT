@@ -37,33 +37,6 @@ int hitSphere(t_ray *r, t_objet *s, float *t)
   return retvalue;
 }
 
-// double  hit_plane(t_objet *p, t_ray *ray, float *t)
-// {
-//   (void)t;
-//   double  a;
-//   double  b;
-//   double  res;
-//   int retvalue;
-
-//   retvalue = 0;
-//   a = vector_dot(p->ori, ray->dir);
-//   if (a == 0)
-//   {
-//     return 0;
-//   }
-//   else
-//   {
-//     b = vector_dot(p->ori, vector_add(ray->start, negative(vector_dot_float(p->dist, p->ori))));
-//     res = (-b / a);
-//   }
-//   if (res < *t && res < 1000)
-//   {
-//     *t = res;
-//     retvalue = 1;
-//   }
-//   return (retvalue);
-// }
-
 int hit_plane(t_objet *p, t_ray *ray, float *t)
 {
     float t2;
@@ -74,7 +47,7 @@ int hit_plane(t_objet *p, t_ray *ray, float *t)
     if (dv == 0)
       return (0);
     t2 = -(vector_dot(p->normal, vector_sub(ray->start, p->point)) / dv);
-    if (t2 < 0.01)
+    if (t2 < 0.01f)
       return (0);
     if (t2 < *t)
       *t = t2;

@@ -71,7 +71,7 @@ void lambertFunctionColor(t_data *d, int j, int currentObject, t_ray lightRay, t
 	{
 		blinnDir = vector_dot_float((1.0f / temp), blinnDir);
 		float blinnTerm = ft_max(vector_dot(blinnDir, n), 0.0f);
-		blinnTerm = 4.0f * powf(blinnTerm , 60) * d->coef;
+		blinnTerm = 40.0f * powf(blinnTerm , 60) * d->coef;
 		// if (blinnTerm > 1.0f)
 		// 	printf("%f\n", blinnTerm);
 		d->color->r += blinnTerm * d->objet[d->currentObject]->color->r;
@@ -187,10 +187,10 @@ void display(t_data *d)
 			// ray.start = ft_vec((float)x, (float)y, (float)-10000.0f);
 			// ray.dir = ft_vec(0.0, 0.0, 1.0f);
 			ray = get_ray(d, get_x_point(x), get_y_point(y));
-			while ((d->coef > 0) && (level < 10))
+			while ((d->coef > 0) && (level < 100))
 			{
 				// ray length
-				float t = 20000.0f;
+				float t = 2000000.0f;
 				//collider object
 				{
 				currentObject = collidObject(d, &t, ray);
