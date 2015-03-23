@@ -179,7 +179,7 @@ t_vec 		*vector_divise_float(float c, t_vec *v1);
 int  		hit_plane(t_objet *p, t_ray *ray, float *t);
 int 		hitSphere(t_ray *r, t_objet *s, float *t);
 int   		hit_cylinder(t_objet *p, t_ray *ray, float *t);
-
+int 		find_cylinder_intersection(t_objet *p, t_ray *ray, float *t);
 t_ray		*rotation(t_ray *vect, t_objet *object);
 t_vec		*rotatepoint(t_vec *point, t_rotation *rotation);
 
