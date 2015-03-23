@@ -61,6 +61,7 @@ typedef struct					s_ray
 
 typedef struct					s_objet
 {
+	t_vec			*normal_ext;
 	t_vec			*point;
 	t_vec			*normal;
 	t_vec			*ori;
@@ -175,18 +176,18 @@ t_vec		*negative(t_vec *v1);
 t_vec		*crossProduct(t_vec *v1, t_vec *v2);
 t_vec 		*vector_divise_float(float c, t_vec *v1);
 
-int  	hit_plane(t_objet *p, t_ray *ray, float *t);
+int  		hit_plane(t_objet *p, t_ray *ray, float *t);
 int 		hitSphere(t_ray *r, t_objet *s, float *t);
-int			findinter_cylinder(t_ray *fray, t_objet *cylinder);
+int   		hit_cylinder(t_objet *p, t_ray *ray, float *t);
 
 t_ray		*rotation(t_ray *vect, t_objet *object);
 t_vec		*rotatepoint(t_vec *point, t_rotation *rotation);
 
 void		sphere(t_data *d, t_vec *vec, int rayon, t_color *color);
 void		plane(t_data *d, t_vec *vec, t_vec *vec2, t_color *color);
-void		cylinder(t_data *d, t_vec *vec1, t_vec *vec2, int color);
+void		cylinder(t_data *d, t_vec *vec1, t_vec *vec2, t_color *color);
 void		camera(t_data *d, int x, int y, int z);
-void		cylinder_start(t_data *d, int h, int rad);
+void		cylinder_start(t_data *d, float h, float rad);
 void 		light(t_data *d, t_vec *vec, float intensity, t_color *color);
 
 void 		displayTest(t_data *d);

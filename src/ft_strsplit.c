@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/21 17:51:18 by acrosnie          #+#    #+#             */
-/*   Updated: 2014/01/12 15:38:44 by acrosnie         ###   ########.fr       */
+/*   Updated: 2015/03/23 13:16:48 by acrosnie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../main.h"
@@ -41,6 +41,6 @@ char	**ft_strsplit(const char* str, const char c)
 		buff[j] = '\0';
 		result[k++] = ft_strjoin("", buff);
 	}	
-	result[k] = '\0';
+	result[k] = (char *)'\0';
     return (result);
 }

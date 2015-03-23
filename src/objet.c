@@ -45,24 +45,22 @@ void	plane(t_data *d, t_vec *vec, t_vec *vec2, t_color *color)
 	d->n++;
 }
 
-void	cylinder_start(t_data *d, int h, int rad)
+void	cylinder_start(t_data *d, float h, float rad)
 {
 	d->objet[d->n] = ft_memalloc(sizeof(t_objet) + 1);
 	d->objet[d->n]->h = h;
 	d->objet[d->n]->radius = rad;
+	d->objet[d->n]->normalInfo = ft_vec(0, 0, 0);
+	printf("%f\n", rad);
 }
 
-void	cylinder(t_data *d, t_vec *vec1, t_vec *vec2, int color)
+void	cylinder(t_data *d, t_vec *vec1, t_vec *vec2, t_color *color)
 {
-	d->objet[d->n]->ori = ft_memalloc(sizeof(t_vec));
-	d->objet[d->n]->ori->x = vec1->x;
-	d->objet[d->n]->ori->y = vec1->y;
-	d->objet[d->n]->ori->z = vec1->z;
-	d->objet[d->n]->anglx = ft_rad(vec2->x);
-	d->objet[d->n]->angly = ft_rad(vec2->y);
-	d->objet[d->n]->anglz = ft_rad(vec2->z);
-	d->objet[d->n]->color = convertColor(color);
+	d->objet[d->n]->ori = vector_copy(vec1);
+	d->objet[d->n]->normal_ext = vector_copy(vec2);
+	d->objet[d->n]->color = color;
 	d->objet[d->n]->type = 2;
+	printf("%f, %f, %f\n", d->objet[d->n]->normal_ext->x, d->objet[d->n]->normal_ext->y, d->objet[d->n]->normal_ext->z);
 	d->n++;
 }
 

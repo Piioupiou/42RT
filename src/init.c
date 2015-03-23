@@ -60,10 +60,10 @@ void	parse(t_data *d)
 		}
 		if (split[9] && !ft_strcmp("cylinder", split[0]))
 		{
-			cylinder_start(d, ft_atoi(split[5]), ft_atoi(split[4]));
-			vec = ft_vec(ft_atoi(split[1]), ft_atoi(split[2]), ft_atoi(split[3]));
-			vec2 = ft_vec(ft_atoi(split[6]), ft_atoi(split[7]), ft_atoi(split[8]));
-			cylinder(d, vec, vec2, ft_atoi(split[9]));
+			cylinder_start(d, atof(split[5]), atof(split[4]));
+			vec = ft_vec(atof(split[1]), atof(split[2]), atof(split[3]));
+			vec2 = ft_vec(atof(split[6]), atof(split[7]), atof(split[8]));
+			cylinder(d, vec, vec2, createColorRgb(atof(split[9]), atof(split[10]), atof(split[11])));
 		}
 		if (split[9] && !ft_strcmp("plane", split[0]))
 		{

@@ -46,10 +46,10 @@ int collidObject(t_data *d, float *t, t_ray *ray)
 	{
 		if (d->objet[k]->type == 1 && hitSphere(ray, d->objet[k], t) == 1)
 			current = k;
+		else if (d->objet[k]->type == 2 && hit_cylinder(d->objet[k], ray, t) == 1)
+			current = k;
 		else if (d->objet[k]->type == 3 && hit_plane(d->objet[k], ray, t) == 1)
 			current = k;
-		//else if(type == 2 1& hitPlane(ray, d->objet[k], t) == 1)	// plan
-			//current = k
 	}
 	return (current);
 }
@@ -121,6 +121,10 @@ t_vec *normalObject(t_data *d, int currentObject, t_vec *newStart)
 		temp = 1.0f / sqrtf(temp); 
 		n = vector_dot_float(temp, n);
 	}
+	else if (d->objet[currentObject]->type == 2)
+	{
+		n = d->objet[currentObject]->normalInfo;
+	}
 	else if (d->objet[currentObject]->type == 3)
 	{
 		n = d->objet[currentObject]->normalInfo;
@@ -181,13 +185,13 @@ void display(t_data *d)
 	{
 		for (x = 0; x < WINDOW_X; x++)
 		{
-			d->coef = 1.0f;
+			d->coef = 0.5f;
 			int level = 0;
 			d->color = createColorRgb(0, 0, 0);
 			// ray.start = ft_vec((float)x, (float)y, (float)-10000.0f);
 			// ray.dir = ft_vec(0.0, 0.0, 1.0f);
 			ray = get_ray(d, get_x_point(x), get_y_point(y));
-			while ((d->coef > 0) && (level < 100))
+			while ((d->coef > 0) && (level < 10))
 			{
 				// ray length
 				float t = 2000000.0f;
