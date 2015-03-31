@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/06 20:23:28 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/03/07 17:27:47 by pgallois         ###   ########.fr       */
+/*   Updated: 2015/03/31 18:37:20 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	sphere(t_data *d, t_vec *vec, int rayon, t_color *color)
 	d->n++;
 }
 
-void	plane(t_data *d, t_vec *vec, t_vec *vec2, t_color *color)
+void	plane(t_data *d, t_vec *vec, t_vec *vec2, t_color *color, t_vec *vec3)
 {
 
 	d->objet[d->n] = ft_memalloc(sizeof(t_objet));
@@ -40,6 +40,9 @@ void	plane(t_data *d, t_vec *vec, t_vec *vec2, t_color *color)
 	d->objet[d->n]->normal->y = vec2->y;
 	d->objet[d->n]->normal->z = vec2->z;
 	d->objet[d->n]->color = color;
+	d->objet[d->n]->anglx = vec3->x;
+	d->objet[d->n]->angly = vec3->y;
+	d->objet[d->n]->anglz = vec3->z;
 	d->objet[d->n]->type = 3;
 	//printf("%f, %f, %f\n", d->objet[d->n]->normal->x, d->objet[d->n]->normal->y, d->objet[d->n]->normal->z);
 	d->n++;

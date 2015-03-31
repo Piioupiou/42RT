@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/31 00:49:38 by acrosnie          #+#    #+#             */
-/*   Updated: 2014/02/14 11:59:40 by acrosnie         ###   ########.fr       */
+/*   Updated: 2015/03/31 18:37:50 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ typedef struct					s_objet
 	float			angly;
 	float			anglz;
 	float			h;
-	float 			intensity;
+	float			intensity;
 	int				type;
 	t_vec			*normalInfo;
 }								t_objet;
@@ -90,6 +90,7 @@ typedef struct					s_camera
 	t_vec				*camdir;
 	t_vec				*camright;
 	t_vec				*camdown;
+	t_vec				*vise;
 }								t_camera;
 
 typedef struct					s_data
@@ -103,12 +104,13 @@ typedef struct					s_data
 	t_vec			**vec;
 	t_objet			**objet;
 	t_cam			*cam;
-	t_color 		*color;
+	t_color			*color;
 	float			coef;
 	t_camera		*cam2;
 	t_ray			*ray;
 	t_ray			*light_ray;
-	int 			currentObject;
+	int				qRender;
+	int				currentObject;
 }								t_data;
 
 typedef struct					s_rotation
@@ -151,7 +153,7 @@ void		img_to_img(t_new_img *s, t_new_img *d);
 int			expose(t_data *data);
 void		rtv1(t_data data);
 int			main(int ac, char **av);
-int			send_key(int key);
+int			send_key(int key, t_data *d);
 
 t_new_img	*create_img(t_new_img *i, t_data *d, unsigned long c, int *t);
 void		background(t_data *data, t_new_img *b);
@@ -184,7 +186,7 @@ t_ray		*rotation(t_ray *vect, t_objet *object);
 t_vec		*rotatepoint(t_vec *point, t_rotation *rotation);
 
 void		sphere(t_data *d, t_vec *vec, int rayon, t_color *color);
-void		plane(t_data *d, t_vec *vec, t_vec *vec2, t_color *color);
+void		plane(t_data *d, t_vec *vec, t_vec *vec2, t_color *color, t_vec *vec3);
 void		cylinder(t_data *d, t_vec *vec1, t_vec *vec2, t_color *color);
 void		camera(t_data *d, int x, int y, int z);
 void		cylinder_start(t_data *d, float h, float rad);
@@ -197,5 +199,10 @@ t_vec 		*normalObject(t_data *d, int currentObject, t_vec *newStart);
 t_vec 		*calcul_light_shadow(t_data *d, float *t, t_vec *newStart, int currentObject);
 void 		calcul_next_iteration(t_data *d, t_ray *ray, t_vec *n, t_vec *newStart, int *level);
 void		init_cam(t_data *d, char **split);
+
+void	rotate_x(float *x, float *y, float *z, float alpha);
+void	rotate_y(float *x, float *y, float *z, float alpha);
+void	rotate_z(float *x, float *y, float *z, float alpha);
+void	rotate_vec_axe(t_vec *v, t_vec *axe);
 
 #endif /*MAIN_H*/
