@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/31 00:50:58 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/02/24 21:11:12 by pgallois         ###   ########.fr       */
+/*   Updated: 2015/03/25 16:14:53 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,23 @@ void gama_exposure(t_data *d)
 	d->color->g = 1.0f - expf(d->color->g * exposure);
 }
 
+void clear(t_data *d)
+{
+	int	x;
+	int	y;
+
+	x = 0;
+	y = 0;
+	d->color = createColorRgb(0, 0, 0);
+	for (y = 0; y < WINDOW_Y; y++)
+	{
+		for (x = 0; x < WINDOW_X; x++)
+		{
+			pixel_put(d->img[0], x, y, d->color);
+		}
+	}
+}
+
 void display(t_data *d)
 {
 	int		x;
@@ -186,10 +203,11 @@ void display(t_data *d)
 	int currentObject;
 	t_vec *n;
 
+	clear(d);
 	t_ray	*ray;
-	for (y = 0; y < WINDOW_Y; y++)
+	for (y = 0; y < WINDOW_Y; y+= d->qRender)
 	{
-		for (x = 0; x < WINDOW_X; x++)
+		for (x = 0; x < WINDOW_X; x+= d->qRender)
 		{
 			d->coef = 0.5f;
 			int level = 0;

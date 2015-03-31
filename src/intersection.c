@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/06 20:18:32 by acrosnie          #+#    #+#             */
-/*   Updated: 2014/02/12 11:26:16 by acrosnie         ###   ########.fr       */
+/*   Updated: 2015/03/31 19:34:57 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,21 @@ int hit_plane(t_objet *p, t_ray *ray, float *t)
 {
     float t2;
     float dv;
-    
-    normalize(p->normal);
-    dv = vector_dot(p->normal, ray->dir);
+	t_vec *normal_tmp;
+	t_vec *rstart;
+	t_vec *rdir;
+
+	rstart = vector_copy(ray->start);
+	rdir = vector_copy(ray->dir);
+	normal_tmp = vector_copy(p->normal);
+	rotate_vec_axe(normal_tmp, ft_vec(p->anglx, p->angly, p->anglz));
+	rotate_vec_axe(rstart, ft_vec(p->anglx, p->angly, p->anglz));
+	rotate_vec_axe(rdir, ft_vec(p->anglx, p->angly, p->anglz));
+    normalize(normal_tmp);
+    dv = vector_dot(normal_tmp, rdir);
     if (dv == 0)
       return (0);
-    t2 = -(vector_dot(p->normal, vector_sub(ray->start, p->point)) / dv);
+    t2 = -(vector_dot(normal_tmp, vector_sub(rstart, p->point)) / dv);
     if (t2 < 0.01f)
       return (0);
     if (t2 < *t)
@@ -54,10 +63,9 @@ int hit_plane(t_objet *p, t_ray *ray, float *t)
     else
       return (0);
     if (dv < 0)
-      p->normalInfo = normalize(p->normal);
+      p->normalInfo = normalize(normal_tmp);
     else
-      p->normalInfo = negative(normalize(p->normal));
-
+      p->normalInfo = negative(normalize(normal_tmp));
     return (1);
 }
 
