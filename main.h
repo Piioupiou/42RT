@@ -55,8 +55,6 @@ typedef struct					s_ray
 {
 	t_vec		*start;
 	t_vec		*dir;
-	t_vec		*o;
-	t_vec		*d;
 }								t_ray;
 
 typedef struct					s_objet
@@ -118,9 +116,9 @@ typedef struct					s_rotation
 
 typedef struct					s_rot
 {
-	t_vec			s;
-	t_vec			c;
-	t_vec           a;
+	t_vec			*s;
+	t_vec			*c;
+	t_vec           *a;
 	float			xy;
 	float			xz;
 	float			yz;
@@ -176,6 +174,7 @@ t_vec		*negative(t_vec *v1);
 t_vec		*crossProduct(t_vec *v1, t_vec *v2);
 t_vec 		*vector_divise_float(float c, t_vec *v1);
 
+int 		hit_cone(t_objet *p, t_ray *ray, float *t);
 int  		hit_plane(t_objet *p, t_ray *ray, float *t);
 int 		hitSphere(t_ray *r, t_objet *s, float *t);
 int   		hit_cylinder(t_objet *p, t_ray *ray, float *t);
@@ -183,6 +182,7 @@ int 		find_cylinder_intersection(t_objet *p, t_ray *ray, float *t);
 t_ray		*rotation(t_ray *vect, t_objet *object);
 t_vec		*rotatepoint(t_vec *point, t_rotation *rotation);
 
+void		cone(t_data *d, t_vec *vec, float h, t_color *color);
 void		sphere(t_data *d, t_vec *vec, int rayon, t_color *color);
 void		plane(t_data *d, t_vec *vec, t_vec *vec2, t_color *color);
 void		cylinder(t_data *d, t_vec *vec1, t_vec *vec2, t_color *color);

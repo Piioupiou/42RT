@@ -50,6 +50,8 @@ int collidObject(t_data *d, float *t, t_ray *ray)
 			current = k;
 		else if (d->objet[k]->type == 3 && hit_plane(d->objet[k], ray, t) == 1)
 			current = k;
+		else if (d->objet[k]->type == 4 && hit_cone(d->objet[k], ray, t) == 1)
+			current = k;
 	}
 	return (current);
 }
@@ -129,6 +131,10 @@ t_vec *normalObject(t_data *d, int currentObject, t_vec *newStart)
 	{
 		n = d->objet[currentObject]->normalInfo;
 	}
+	else if (d->objet[currentObject]->type == 4)
+	{
+		n = d->objet[currentObject]->normalInfo;
+	}
 	return (n);
 }
 
@@ -196,12 +202,10 @@ void display(t_data *d)
 				// ray length
 				float t = 2000000.0f;
 				//collider object
-				{
 				currentObject = collidObject(d, &t, ray);
-				}
 				if (currentObject == -1)
 					break;
-				// d->color = createColorRgb(1, 0, 1);
+				//d->color = createColorRgb(1, 0, 1);
 				// break;
 				t_vec *newStart = vector_add(ray->start, vector_dot_float(t, ray->dir));
 				d->ray = ray;
@@ -210,6 +214,7 @@ void display(t_data *d)
 					break ;
 				// on itére sur la prochaine reflexion
 				calcul_next_iteration(d, ray, n, newStart, &level);
+				//break ;
 			}
 			gama_exposure(d);
 			pixel_put(d->img[0], x, y, d->color);

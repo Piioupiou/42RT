@@ -61,6 +61,100 @@ int hit_plane(t_objet *p, t_ray *ray, float *t)
     return (1);
 }
 
+t_vec   *get_normal_at_cone(t_objet *cone, t_vec *point)
+{
+  t_vec  *v;
+
+  v = normalize(vector_add(point, negative(cone->ori)));
+  return (v);
+}
+
+int    delta_cone(float *t, float delta, float a, float b)
+{
+  float  x1;
+  float  x2;
+
+  x1 = (-b - sqrt(delta)) / (2 * a);
+  x2 = (-b + sqrt(delta)) / (2 * a);
+  if (x1 > 0.000001 && (x1 < x2 || x2 < 0.000001) && x1 < *t)
+  {
+    *t = x1;
+  }
+  else if (x2 > 0.00001 && (x2 < x1 || x1 < 0.00001) && x2 < *t)
+  {
+    *t = x2;
+  }
+  return (1);
+}
+
+// int     check_k_cone(t_gen *gen)
+// {
+//   float tmp;
+
+//   gen->cone.k = ((-gen->del.b) - sqrt(gen->del.delta)) / (2 * gen->del.a);
+//   tmp = (-gen->del.b + sqrt(gen->del.delta)) / (2 * gen->del.a);
+//   if (tmp < gen->cone.k && tmp > MIN)
+//     gen->cone.k = tmp;
+//   if (gen->cone.k >= MIN)
+//     return (1);
+//   return (0);
+// }
+
+int hit_cone(t_objet *p, t_ray *ray, float *t)
+{
+  float a, b ,c, delta, k;
+  float alpha = 80;
+  float tanj = pow((tan(alpha * M_PI / 180)), 2);
+  a = pow(ray->dir->x, 2) + pow(ray->dir->y, 2) - (pow(ray->dir->z, 2) / tanj);
+  b = 2 * ((-p->ori->x - 0) * ray->dir->x + (p->ori->y) * ray->dir->y) - (ray->dir->z / tanj);
+  c = pow((-p->ori->x - 0), 2) + pow((p->ori->y), 2) - (p->ori->z / tanj);
+  delta = pow(b, 2) - 4 * a * c;
+  if (delta >= 0)
+  {
+    k = ((-b) - sqrt(delta)) / (2 * a);
+    float tmp = (-b + sqrt(delta)) / (2 * a);
+    if (tmp < k && tmp > 0)
+      k = tmp;
+    if (k >= 0)
+    {
+      *t = k;
+      p->normalInfo->x = (p->ori->x) + *t * ray->dir->x;
+      p->normalInfo->y = (p->ori->y) + *t * ray->dir->y;
+      p->normalInfo->z = (p->ori->z) + *t * ray->dir->z;
+      //p->normalInfo = get_normal_at_cone(p, vector_add(ray->start, vector_dot_float(*t, ray->dir)));
+      return (1);
+    }
+  }
+  else
+  {
+    k = 1000000;
+  }
+  return (0);
+}
+
+// int hit_cone(t_objet *p, t_ray *ray, float *t)
+// {
+//   float  a;
+//   float  b;
+//   float  c;
+//   float  tan_pow;
+//   t_vec  *k;
+
+//   tan_pow = pow(0.78f / 0.33f, 2);
+//   a = ray->dir->x * ray->dir->x * tan_pow + ray->dir->y * ray->dir->y * tan_pow - ray->dir->z * ray->dir->z;
+//   b = 2.0 * (p->ori->x * ray->dir->x * tan_pow + p->ori->y * ray->dir->y * tan_pow - p->ori->z * ray->dir->z);
+//   c = p->ori->x * p->ori->x * tan_pow + p->ori->y * p->ori->y * tan_pow - p->ori->z * p->ori->z;
+//   float delta = b * b - 4 * a * c;
+//   if (delta >= 0)
+//   {
+//     *t = (-b + sqrt(delta)) / (2 * a);
+//     p->normalInfo = get_normal_at_cone(p, vector_add(ray->start, vector_dot_float(*t, ray->dir)));
+//     return (1);
+//   }
+//   return (0);
+// }
+
+
 int   hit_cylinder(t_objet *p, t_ray *ray, float *t)
 {
   float Aq,Bq,Cq;
@@ -69,6 +163,12 @@ int   hit_cylinder(t_objet *p, t_ray *ray, float *t)
   t_vec *intersect;
   float Xd,Yd,Zd,Xo,Yo,Zo;
 
+  // t_ray *ray2;
+
+  // ray2 = ft_memalloc(sizeof(t_ray));
+  // ray2->start = vector_copy(ray->start);
+  // ray2->dir = vector_copy(ray->dir);
+  // ray2 = rotation(ray2, p);
   Xd = ray->dir->x;
   Yd = ray->dir->y;
   Zd = ray->dir->z;

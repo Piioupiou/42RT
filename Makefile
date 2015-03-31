@@ -6,7 +6,7 @@
 #    By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/11/27 12:31:31 by acrosnie          #+#    #+#              #
-#    Updated: 2015/03/23 13:48:33 by acrosnie         ###   ########.fr        #
+#    Updated: 2015/03/27 17:21:58 by acrosnie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -14,7 +14,7 @@ NAME = rtv1
 
 NAME_MINILIBX = mlx
 
-CC = gcc -g -Werror -Wall -Werror -O3
+CC = gcc -g -O3
 
 DIR_LIBS = /usr/X11/lib/
 

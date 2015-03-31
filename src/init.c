@@ -58,6 +58,11 @@ void	parse(t_data *d)
 			vec = ft_vec(atof(split[1]), atof(split[2]), atof(split[3]));
 			sphere(d, vec, ft_atoi(split[4]), createColorRgb(atof(split[5]), atof(split[6]), atof(split[7])));
 		}
+		if (split[7] && !ft_strcmp("cone", split[0]))
+		{
+			vec = ft_vec(atof(split[1]), atof(split[2]), atof(split[3]));
+			cone(d, vec, atof(split[4]), createColorRgb(atof(split[5]), atof(split[6]), atof(split[7])));
+		}
 		if (split[9] && !ft_strcmp("cylinder", split[0]))
 		{
 			cylinder_start(d, atof(split[5]), atof(split[4]));

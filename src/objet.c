@@ -27,6 +27,22 @@ void	sphere(t_data *d, t_vec *vec, int rayon, t_color *color)
 	d->n++;
 }
 
+void	cone(t_data *d, t_vec *vec, float h, t_color *color)
+{
+
+	d->objet[d->n] = ft_memalloc(sizeof(t_objet));
+	d->objet[d->n]->ori = ft_memalloc(sizeof(t_vec));
+	d->objet[d->n]->ori->x = vec->x;
+	d->objet[d->n]->ori->y = vec->y;
+	d->objet[d->n]->ori->z = vec->z;
+	d->objet[d->n]->h = h;
+	d->objet[d->n]->color = color;
+	d->objet[d->n]->type = 4;
+	d->objet[d->n]->normalInfo = ft_vec(0, 0, 0);
+	printf("%f, %f, %f\n", d->objet[d->n]->ori->x, d->objet[d->n]->ori->y, d->objet[d->n]->ori->z);
+	d->n++;
+}
+
 void	plane(t_data *d, t_vec *vec, t_vec *vec2, t_color *color)
 {
 
