@@ -76,9 +76,9 @@ void lambertFunctionColor(t_data *d, int j, int currentObject, t_ray lightRay, t
 		blinnTerm = 40.0f * powf(blinnTerm , 60) * d->coef;
 		// if (blinnTerm > 1.0f)
 		// 	printf("%f\n", blinnTerm);
-		d->color->r += blinnTerm * d->objet[d->currentObject]->color->r;
-		d->color->g += blinnTerm * d->objet[d->currentObject]->color->g;
-		d->color->b += blinnTerm * d->objet[d->currentObject]->color->b;
+		d->color->r += blinnTerm * d->objet[currentObject]->color->r;
+		d->color->g += blinnTerm * d->objet[currentObject]->color->g;
+		d->color->b += blinnTerm * d->objet[currentObject]->color->b;
 	}
 }
 
@@ -142,7 +142,7 @@ void calcul_next_iteration(t_data *d, t_ray *ray, t_vec *n, t_vec *newStart, int
 {
 	float reflet;
 
-	reflet = 2.0f * vector_dot(ray->dir, n);
+	reflet = 2 * vector_dot(ray->dir, n);
 	d->coef *= 0.25f;
 	ray->start = newStart;
 	ray->dir = vector_sub(ray->dir, vector_dot_float(reflet, n));

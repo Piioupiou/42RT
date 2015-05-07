@@ -111,11 +111,12 @@ int    delta_cone(float *t, float delta, float a, float b)
 int hit_cone(t_objet *p, t_ray *ray, float *t)
 {
   float a, b ,c, delta, k;
-  float alpha = 80;
+  float alpha = 60;
   float tanj = pow((tan(alpha * M_PI / 180)), 2);
   a = pow(ray->dir->x, 2) + pow(ray->dir->y, 2) - (pow(ray->dir->z, 2) / tanj);
-  b = 2 * ((-p->ori->x - 0) * ray->dir->x + (p->ori->y) * ray->dir->y) - (ray->dir->z / tanj);
-  c = pow((-p->ori->x - 0), 2) + pow((p->ori->y), 2) - (p->ori->z / tanj);
+  //b = 2 * ((p->ori->x - 0) * ray->dir->x) + (p->ori->y * ray->dir->y) - (ray->dir->z / tanj);
+  b = 2 * ((100 - p->ori->x) * ray->dir->x + (1500 - p->ori->y) * ray->dir->y) - (ray->dir->z / tanj);
+  c = pow((100 - p->ori->x), 2) + pow((1500 - p->ori->y), 2) - (p->ori->z / tanj);
   delta = pow(b, 2) - 4 * a * c;
   if (delta >= 0)
   {
@@ -126,10 +127,10 @@ int hit_cone(t_objet *p, t_ray *ray, float *t)
     if (k >= 0)
     {
       *t = k;
-      p->normalInfo->x = (p->ori->x) + *t * ray->dir->x;
-      p->normalInfo->y = (p->ori->y) + *t * ray->dir->y;
-      p->normalInfo->z = (p->ori->z) + *t * ray->dir->z;
-      //p->normalInfo = get_normal_at_cone(p, vector_add(ray->start, vector_dot_float(*t, ray->dir)));
+      p->normalInfo->x = (p->ori->x) + *t * -ray->dir->x;
+      p->normalInfo->y = (p->ori->y) + *t * -ray->dir->y;
+      p->normalInfo->z = (p->ori->z) + *t * -ray->dir->z;
+      //p->normalInfo = get_normal_at_cone(p, vector_add(ray->start, vector_dot_float(-*t, ray->dir)));
       return (1);
     }
   }
