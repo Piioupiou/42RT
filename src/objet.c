@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/06 20:23:28 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/03/31 18:37:20 by pgallois         ###   ########.fr       */
+/*   Updated: 2015/05/11 21:11:52 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,16 @@ void	cylinder_start(t_data *d, float h, float rad)
 	printf("%f\n", rad);
 }
 
-void	cylinder(t_data *d, t_vec *vec1, t_vec *vec2, t_color *color)
+void	cylinder(t_data *d, t_vec *vec1, t_vec *vec2, t_color *color, t_vec *vec3)
 {
 	d->objet[d->n]->ori = vector_copy(vec1);
 	d->objet[d->n]->normal_ext = vector_copy(vec2);
 	d->objet[d->n]->color = color;
 	d->objet[d->n]->type = 2;
 	printf("%f, %f, %f\n", d->objet[d->n]->normal_ext->x, d->objet[d->n]->normal_ext->y, d->objet[d->n]->normal_ext->z);
+	d->objet[d->n]->anglx = vec3->x;
+	d->objet[d->n]->angly = vec3->y;
+	d->objet[d->n]->anglz = vec3->z;
 	d->n++;
 }
 

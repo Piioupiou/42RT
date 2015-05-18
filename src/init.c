@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/21 23:32:02 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/03/31 19:06:58 by pgallois         ###   ########.fr       */
+/*   Updated: 2015/05/11 20:34:43 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <mlx.h>
@@ -64,12 +64,13 @@ void	parse(t_data *d)
 			vec = ft_vec(atof(split[1]), atof(split[2]), atof(split[3]));
 			cone(d, vec, atof(split[4]), createColorRgb(atof(split[5]), atof(split[6]), atof(split[7])));
 		}
-		if (split[9] && !ft_strcmp("cylinder", split[0]))
+		if (split[14] && !ft_strcmp("cylinder", split[0]))
 		{
 			cylinder_start(d, atof(split[5]), atof(split[4]));
 			vec = ft_vec(atof(split[1]), atof(split[2]), atof(split[3]));
 			vec2 = ft_vec(atof(split[6]), atof(split[7]), atof(split[8]));
-			cylinder(d, vec, vec2, createColorRgb(atof(split[9]), atof(split[10]), atof(split[11])));
+			vec3 = ft_vec(atof(split[12]), atof(split[13]), atof(split[14]));
+			cylinder(d, vec, vec2, createColorRgb(atof(split[9]), atof(split[10]), atof(split[11])), vec3 );
 		}
 		if (split[12] && !ft_strcmp("plane", split[0]))
 		{
