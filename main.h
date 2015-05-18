@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/31 00:49:38 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/03/31 18:37:50 by pgallois         ###   ########.fr       */
+/*   Updated: 2015/05/11 20:34:41 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,7 @@ t_vec		*rotatepoint(t_vec *point, t_rotation *rotation);
 void		cone(t_data *d, t_vec *vec, float h, t_color *color);
 void		sphere(t_data *d, t_vec *vec, int rayon, t_color *color);
 void		plane(t_data *d, t_vec *vec, t_vec *vec2, t_color *color, t_vec *vec3);
-void		cylinder(t_data *d, t_vec *vec1, t_vec *vec2, t_color *color);
+void		cylinder(t_data *d, t_vec *vec1, t_vec *vec2, t_color *color, t_vec *vec3);
 void		camera(t_data *d, int x, int y, int z);
 void		cylinder_start(t_data *d, float h, float rad);
 void 		light(t_data *d, t_vec *vec, float intensity, t_color *color);
