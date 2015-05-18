@@ -67,19 +67,39 @@ void lambertFunctionColor(t_data *d, int j, int currentObject, t_ray lightRay, t
 		* d->objet[currentObject]->color->g) * d->objet[j]->intensity;
 	d->color->b += (lambert * d->objet[j]->color->b
 		* d->objet[currentObject]->color->b) * d->objet[j]->intensity;
-	t_vec *blinnDir = vector_sub(lightRay.dir, d->ray->dir);
+	// t_vec *blinnDir = vector_sub(lightRay.dir, d->ray->dir);
+	// float temp = sqrtf(vector_dot(blinnDir, blinnDir));
+	// if (temp != 0.0f)
+	// {
+	// 	blinnDir = vector_dot_float((1.0f / temp), blinnDir);
+	// 	float blinnTerm = ft_max(vector_dot(blinnDir, n), 0.0f);
+	// 	blinnTerm = 40.0f * powf(blinnTerm , 60) * d->coef;
+	// 	d->color->r += blinnTerm * d->objet[currentObject]->color->r;
+	// 	d->color->g += blinnTerm * d->objet[currentObject]->color->g;
+	// 	d->color->b += blinnTerm * d->objet[currentObject]->color->b;
+	// }
+}
+
+void calcul_next_iteration(t_data *d, t_ray *ray, t_vec *n, t_vec *newStart, int *level)
+{
+	float reflet;
+
+	t_vec *blinnDir = vector_sub(d->light_ray->dir, d->ray->dir);
 	float temp = sqrtf(vector_dot(blinnDir, blinnDir));
 	if (temp != 0.0f)
 	{
 		blinnDir = vector_dot_float((1.0f / temp), blinnDir);
 		float blinnTerm = ft_max(vector_dot(blinnDir, n), 0.0f);
 		blinnTerm = 40.0f * powf(blinnTerm , 60) * d->coef;
-		// if (blinnTerm > 1.0f)
-		// 	printf("%f\n", blinnTerm);
-		d->color->r += blinnTerm * d->objet[currentObject]->color->r;
-		d->color->g += blinnTerm * d->objet[currentObject]->color->g;
-		d->color->b += blinnTerm * d->objet[currentObject]->color->b;
+		d->color->r += blinnTerm * d->objet[d->currentObject]->color->r;
+		d->color->g += blinnTerm * d->objet[d->currentObject]->color->g;
+		d->color->b += blinnTerm * d->objet[d->currentObject]->color->b;
 	}
+	reflet = 2.0f * vector_dot(ray->dir, n);
+	d->coef *= 0.5f;
+	ray->start = newStart;
+	ray->dir = vector_sub(ray->dir, vector_dot_float(reflet, n));
+	level++;
 }
 
 t_vec *calcul_light_shadow(t_data *d, float *t, t_vec *newStart, int currentObject)
@@ -138,17 +158,6 @@ t_vec *normalObject(t_data *d, int currentObject, t_vec *newStart)
 	return (n);
 }
 
-void calcul_next_iteration(t_data *d, t_ray *ray, t_vec *n, t_vec *newStart, int *level)
-{
-	float reflet;
-
-	reflet = 2 * vector_dot(ray->dir, n);
-	d->coef *= 0.25f;
-	ray->start = newStart;
-	ray->dir = vector_sub(ray->dir, vector_dot_float(reflet, n));
-	level++;
-}
-
 t_ray	*get_ray(t_data *d, float x, float y)
 {
 	t_vec	*v1;
@@ -173,7 +182,7 @@ void gama_exposure(t_data *d)
 	d->color->b = powf(d->color->b, invgamma);
 	d->color->r = powf(d->color->r, invgamma);
 	d->color->g = powf(d->color->g, invgamma);
-	float exposure = - 0.66f;
+	float exposure = -0.66f;
 	d->color->b = 1.0f - expf(d->color->b * exposure);
 	d->color->r = 1.0f - expf(d->color->r * exposure);
 	d->color->g = 1.0f - expf(d->color->g * exposure);
