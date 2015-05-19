@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/06 20:18:32 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/05/19 03:11:11 by pgallois         ###   ########.fr       */
+/*   Updated: 2015/05/19 06:52:03 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,21 +100,18 @@ int    delta_cone(float *t, float delta, float a, float b)
 int hit_cone(t_objet *p, t_ray *ray, float *t)
 {
 	float a, b ,c, delta, k;
-	float alpha = 35;
-	float tanj = tan(pow(alpha * M_PI / 180, 2.0f));
-	//float al = alpha * M_PI / 180;
+	float alpha = p->h;
+	float t2 = pow(alpha * M_PI / 180, 2.0f);
+
 	t_vec *rstart = NULL;
 	t_vec *rdir = NULL;
-	rstart = vector_copy(ray->start);
+	rstart = vector_sub(ray->start, p->ori);
 	rdir = vector_copy(ray->dir);
-	//rotate_vec_axe(rdir, ft_vec(p->anglx, p->angly, p->anglz));
-	//a = pow(ray->dir->x, 2) + pow(ray->dir->y, 2) - (pow(ray->dir->z, 2) / tanj);
-	//b = 2 * ((p->ori->x) * ray->dir->x + (p->ori->y) * ray->dir->y) - ((ray->dir->z) / tanj);
-	//c = pow((p->ori->x), 2) + pow((p->ori->y), 2) - ((p->ori->z) / tanj);
-	a = pow(rdir->x, 2.0f) + pow(rdir->y, 2.0f) - pow(alpha * M_PI / 180, 2.0f) * pow(rdir->z, 2.0f);
-	b = rstart->x * rdir->x + rstart->y * rdir->y - pow(alpha * M_PI / 180, 2.0f) * rstart->z * rdir->z;
+	rotate_vec_axe(rdir, ft_vec(p->anglx, p->angly, p->anglz));
+	a = pow(rdir->x, 2.0f) + pow(rdir->y, 2.0f) - t2 * pow(rdir->z, 2.0f);
+	b = rstart->x * rdir->x + rstart->y * rdir->y - t2 * rstart->z * rdir->z;
 	b = b * 2.0f;
-	c = pow(rstart->x, 2.0f) + pow(rstart->y, 2) - pow(alpha * M_PI / 180, 2.0f) * pow(rstart->z, 2);
+	c = pow(rstart->x, 2.0f) + pow(rstart->y, 2) - t2 * pow(rstart->z, 2);
 	delta = pow(b, 2.0f) - 4 * a * c;
 	if (delta >= 0)
 	{
@@ -135,11 +132,8 @@ int hit_cone(t_objet *p, t_ray *ray, float *t)
 			V->z /= m;
 			p->normalInfo->x = P->x;
 			p->normalInfo->y = P->y;
-			p->normalInfo->z = -P->z * tanj;
-			//p->normalInfo->x = V->x * p->h / al;
-			//p->normalInfo->y = al / p->h;
-			//p->normalInfo->z = V->z * p->h / al;
-			if (vector_dot(p->normalInfo, rdir) < 0)
+			p->normalInfo->z = -P->z * tan(t2);
+			if (vector_dot(p->normalInfo, ray->dir) < 0)
 				p->normalInfo = normalize(p->normalInfo);
 			else
 				p->normalInfo = negative(normalize(p->normalInfo));

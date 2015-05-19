@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/31 00:49:38 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/05/11 20:34:41 by pgallois         ###   ########.fr       */
+/*   Updated: 2015/05/19 03:53:26 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,7 @@ int 		find_cylinder_intersection(t_objet *p, t_ray *ray, float *t);
 t_ray		*rotation(t_ray *vect, t_objet *object);
 t_vec		*rotatepoint(t_vec *point, t_rotation *rotation);
 
-void		cone(t_data *d, t_vec *vec, float h, t_color *color);
+void		cone(t_data *d, t_vec *vec, float h, t_color *color, t_vec *angle);
 void		sphere(t_data *d, t_vec *vec, int rayon, t_color *color);
 void		plane(t_data *d, t_vec *vec, t_vec *vec2, t_color *color, t_vec *vec3);
 void		cylinder(t_data *d, t_vec *vec1, t_vec *vec2, t_color *color, t_vec *vec3);

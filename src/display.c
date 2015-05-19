@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/31 00:50:58 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/05/19 03:30:34 by pgallois         ###   ########.fr       */
+/*   Updated: 2015/05/19 07:06:31 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,13 +208,13 @@ void display(t_data *d)
 	{
 		for (x = 0; x < WINDOW_X; x+= d->qRender)
 		{
-			d->coef = 0.2f;
+			d->coef = 0.9f;
 			int level = 0;
 			d->color = createColorRgb(0, 0, 0);
 			// ray.start = ft_vec((float)x, (float)y, (float)-10000.0f);
 			// ray.dir = ft_vec(0.0, 0.0, 1.0f);
 			ray = get_ray(d, get_x_point(x), get_y_point(y));
-			while ((d->coef > 0) && (level < 1))
+			while ((d->coef > 0) && (level < 100))
 			{
 				// ray length
 				float t = 90000000.0f;

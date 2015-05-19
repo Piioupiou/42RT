@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/06 20:23:28 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/05/11 21:11:52 by pgallois         ###   ########.fr       */
+/*   Updated: 2015/05/19 03:53:28 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	sphere(t_data *d, t_vec *vec, int rayon, t_color *color)
 	d->n++;
 }
 
-void	cone(t_data *d, t_vec *vec, float h, t_color *color)
+void	cone(t_data *d, t_vec *vec, float h, t_color *color, t_vec *angle)
 {
 
 	d->objet[d->n] = ft_memalloc(sizeof(t_objet));
@@ -38,12 +38,15 @@ void	cone(t_data *d, t_vec *vec, float h, t_color *color)
 	d->objet[d->n]->h = h;
 	d->objet[d->n]->color = color;
 	d->objet[d->n]->type = 4;
+	d->objet[d->n]->anglx = angle->x;
+	d->objet[d->n]->angly = angle->y;
+	d->objet[d->n]->anglz = angle->z;
 	d->objet[d->n]->normalInfo = ft_vec(0, 0, 0);
 	printf("%f, %f, %f\n", d->objet[d->n]->ori->x, d->objet[d->n]->ori->y, d->objet[d->n]->ori->z);
 	d->n++;
 }
 
-void	plane(t_data *d, t_vec *vec, t_vec *vec2, t_color *color, t_vec *vec3)
+void	plane(t_data *d, t_vec *vec, t_vec *vec2, t_color *color, t_vec *angle)
 {
 
 	d->objet[d->n] = ft_memalloc(sizeof(t_objet));
@@ -56,9 +59,9 @@ void	plane(t_data *d, t_vec *vec, t_vec *vec2, t_color *color, t_vec *vec3)
 	d->objet[d->n]->normal->y = vec2->y;
 	d->objet[d->n]->normal->z = vec2->z;
 	d->objet[d->n]->color = color;
-	d->objet[d->n]->anglx = vec3->x;
-	d->objet[d->n]->angly = vec3->y;
-	d->objet[d->n]->anglz = vec3->z;
+	d->objet[d->n]->anglx = angle->x;
+	d->objet[d->n]->angly = angle->y;
+	d->objet[d->n]->anglz = angle->z;
 	d->objet[d->n]->type = 3;
 	//printf("%f, %f, %f\n", d->objet[d->n]->normal->x, d->objet[d->n]->normal->y, d->objet[d->n]->normal->z);
 	d->n++;
