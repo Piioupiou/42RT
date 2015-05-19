@@ -83,7 +83,7 @@ int			send_key(int key, t_data *d)
 void		rtv1(t_data data)
 {
 	data.n = 0;
-	data.qRender = 4;
+	data.qRender = 1;
 	data.ptr = mlx_init();
 	data.win = mlx_new_window(data.ptr, WINDOW_X, WINDOW_Y, "rtv1");
 	init(&data);
