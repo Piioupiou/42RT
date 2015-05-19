@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/31 00:50:58 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/05/11 22:36:19 by pgallois         ###   ########.fr       */
+/*   Updated: 2015/05/19 03:16:08 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ int collidObject(t_data *d, float *t, t_ray *ray)
 void lambertFunctionColor(t_data *d, int j, int currentObject, t_ray lightRay, t_vec *n)
 {
 	float lambert;
-
 	lambert = vector_dot(lightRay.dir, n) * d->coef;
 	d->color->r += (lambert * d->objet[j]->color->r
 		* d->objet[currentObject]->color->r) * d->objet[j]->intensity;
@@ -75,7 +74,7 @@ void lambertFunctionColor(t_data *d, int j, int currentObject, t_ray lightRay, t
 		float blinnTerm = ft_max(vector_dot(blinnDir, n), 0.0f);
 		blinnTerm = 40.0f * powf(blinnTerm , 60) * d->coef;
 		// if (blinnTerm > 1.0f)
-		// 	printf("%f\n", blinnTerm);
+		//	printf("%f\n", blinnTerm);
 		d->color->r += blinnTerm * d->objet[currentObject]->color->r;
 		d->color->g += blinnTerm * d->objet[currentObject]->color->g;
 		d->color->b += blinnTerm * d->objet[currentObject]->color->b;
@@ -85,7 +84,7 @@ void lambertFunctionColor(t_data *d, int j, int currentObject, t_ray lightRay, t
 t_vec *calcul_light_shadow(t_data *d, float *t, t_vec *newStart, int currentObject)
 {
 	int j = -1;
-	t_ray 	lightRay;
+	t_ray	lightRay;
 	t_vec *n;
 
 	// la normale au point d'intersection
@@ -143,7 +142,7 @@ void calcul_next_iteration(t_data *d, t_ray *ray, t_vec *n, t_vec *newStart, int
 	float reflet;
 
 	reflet = 2 * vector_dot(ray->dir, n);
-	d->coef *= 0.25f;
+	d->coef *= 0.5f;
 	ray->start = newStart;
 	ray->dir = vector_sub(ray->dir, vector_dot_float(reflet, n));
 	level++;
@@ -209,16 +208,16 @@ void display(t_data *d)
 	{
 		for (x = 0; x < WINDOW_X; x+= d->qRender)
 		{
-			d->coef = 0.5f;
+			d->coef = 0.2f;
 			int level = 0;
 			d->color = createColorRgb(0, 0, 0);
 			// ray.start = ft_vec((float)x, (float)y, (float)-10000.0f);
 			// ray.dir = ft_vec(0.0, 0.0, 1.0f);
 			ray = get_ray(d, get_x_point(x), get_y_point(y));
-			while ((d->coef > 0) && (level < 10))
+			while ((d->coef > 0) && (level < 1))
 			{
 				// ray length
-				float t = 2000000.0f;
+				float t = 90000000.0f;
 				//collider object
 				currentObject = collidObject(d, &t, ray);
 				if (currentObject == -1)
