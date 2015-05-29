@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/21 05:50:51 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/05/21 05:51:04 by acrosnie         ###   ########.fr       */
+/*   Updated: 2015/05/29 15:30:18 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,27 @@ void	exposure(t_color *color)
 	color->b = 1.0f - expf(color->b * exposure);
 	color->r = 1.0f - expf(color->r * exposure);
 	color->g = 1.0f - expf(color->g * exposure);
+}
+
+void	option_normal(t_data *d)
+{
+	t_option	*o;
+
+	o = (t_option*)malloc(sizeof(t_option));
+	o->level_max = 10;
+	o->coef = 0.25f;
+	o->activate_gama = 1;
+	o->activate_exposure = 1;
+	o->activate_shadow = 1;
+	o->activate_light = 1;
+	o->activate_reflection = 0;
+	o->activate_antialiasing = 1;
+	d->option = o;
+}
+
+void	interface(t_data *d)
+{
+	ft_putstr("Welcome to the interface bitch!\n");
 }
 
 void	gama(t_color *color)

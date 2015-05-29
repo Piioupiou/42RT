@@ -6,25 +6,12 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/06 20:23:28 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/05/19 03:53:28 by pgallois         ###   ########.fr       */
+/*   Updated: 2015/05/29 14:47:02 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "../main.h"
-
-void create_vec(t_data *d, int number)
-{
-	int i;
-
-
-	d->objet[d->n]->m_vec = ft_memalloc(sizeof(t_vec *) * 10);
-	i = -1;
-	while (++i < number)
-	{
-		d->objet[d->n]->m_vec[i] = ft_vec(0, 0, 0);
-	}
-}
 
 void	sphere(t_data *d, t_vec *vec, int rayon, t_color *color)
 {
@@ -54,7 +41,6 @@ void	cone(t_data *d, t_vec *vec, t_color *color, t_vec *angle)
 	d->objet[d->n]->normali = ft_vec(0, 0, 0);
 	d->n++;
 }
-
 
 void	plane(t_data *d, t_vec *vec, t_vec *vec2, t_vec *angle)
 {

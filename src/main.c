@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pgallois <pgallois@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/05/21 05:27:24 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/05/21 05:27:26 by acrosnie         ###   ########.fr       */
+/*   Created: 2015/05/21 05:27:24 by pgallois          #+#    #+#             */
+/*   Updated: 2015/05/29 14:36:33 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,9 @@ int		expose(t_data *d)
 	return (0);
 }
 
-void	optionNormal(t_data *d)
-{
-	t_option	*o;
-
-	o = (t_option*)malloc(sizeof(t_option));
-	o->level_max = 10;
-	o->coef = 0.25f;
-	o->activate_gama = 1;
-	o->activate_exposure = 1;
-	o->activate_shadow = 1;
-	o->activate_light = 1;
-	o->activate_reflection = 1;
-	o->activate_antialiasing = 8;
-	d->option = o;
-}
-
 void	rtv1(t_data data)
 {
-	optionNormal(&data);
+	option_normal(&data);
 	data.n = 0;
 	data.qrender = 1;
 	data.ptr = mlx_init();
@@ -76,12 +60,6 @@ void	free_all(t_data *d)
 	free(d->tmpcolor);
 	free(d->cam2);
 	free(d->ray);
-}
-
-void	interface(t_data *d)
-{
-	ft_putstr("Welcome to the interface bitch!\n");
-
 }
 
 int		main(int ac, char **av)

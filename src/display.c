@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/21 06:33:15 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/05/21 06:33:15 by acrosnie         ###   ########.fr       */
+/*   Updated: 2015/05/29 14:13:21 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void	raytracing(t_data *d, float fragmentx, float fragmenty)
 
 	d->coef = d->option->coef;
 	d->ray = get_ray(d, get_x_point(fragmentx), get_y_point(fragmenty));
-
 	d->option->level = 0;
 	while ((d->coef > 0.0f) && (d->option->level < d->option->level_max))
 	{
@@ -65,7 +64,8 @@ void	raytracing(t_data *d, float fragmentx, float fragmenty)
 		current = col_object(d, &t, d->ray);
 		if (current == -1)
 			break ;
-		assign_value_vec(vector_add(*d->ray->start, vector_dot_float(t, *d->ray->dir)), d->new_start);
+		assign_value_vec(vector_add(*d->ray->start, \
+					vector_dot_float(t, *d->ray->dir)), d->new_start);
 		if ((n = calcul_light_shadow(d, &t, d->new_start, current)) == NULL)
 			break ;
 		calcul_next_iteration(d, d->ray, n, d->new_start);
@@ -74,40 +74,30 @@ void	raytracing(t_data *d, float fragmentx, float fragmenty)
 	}
 }
 
-void colorZero(t_color *c)
-{
-	c->r = 0;
-	c->g = 0;
-	c->b = 0;
-}
-
 void	raytracing_aliasing(t_data *d, int x, int y)
 {
 	float	fragmentx;
 	float	fragmenty;
-	float a = 1.0f / d->option->activate_antialiasing; // 0.5f // 1.0f
-	float p = 1 / pow(d->option->activate_antialiasing, 2); //0.25f // 0.5f
-	colorZero(d->tmp2clr);
-	fragmentx = x - 0.5f; //x=1; 0.5f
-	while (fragmentx < x + 0.5f)
+	float	a[2];
+
+	a[0] = 1.0f / d->option->activate_antialiasing;
+	a[1] = 1 / pow(d->option->activate_antialiasing, 2);
+	color_assigne(d->tmp2clr, 0, 0, 0);
+	fragmentx = x - 0.5f - a[0];
+	while ((fragmentx += a[0]) < x + 0.5f)
 	{
-		fragmenty = y - 0.5f;
-		while (fragmenty < y + 0.5f)
+		fragmenty = y - 0.5f - a[0];
+		while ((fragmenty += a[0]) < y + 0.5f)
 		{
-			colorZero(d->color);
+			color_assigne(d->color, 0, 0, 0);
 			raytracing(d, fragmentx, fragmenty);
 			if (d->option->activate_exposure)
 				exposure(d->color);
-			d->tmp2clr->r = d->tmp2clr->r + (d->color->r * p);
-			d->tmp2clr->g = d->tmp2clr->g + (d->color->g * p);
-			d->tmp2clr->b = d->tmp2clr->b + (d->color->b * p);
-			// if (d->tmp2clr->r > 0)
-			// 	printf("%f\n", d->tmp2clr->r);
-			fragmenty += a;
+			color_assigne(d->tmp2clr, d->tmp2clr->r + (d->color->r * a[1]),\
+			d->tmp2clr->g + (d->color->g * a[1]), \
+			d->tmp2clr->b + (d->color->b * a[1]));
 		}
-		fragmentx += a;
 	}
-	//d->color = d->tmp2clr;
 	if (d->option->activate_gama)
 		gama(d->tmp2clr);
 	pixel_put(d->img[0], x, y, d->tmp2clr);
@@ -115,8 +105,6 @@ void	raytracing_aliasing(t_data *d, int x, int y)
 
 void	display(t_data *d)
 {
-	clock_t t;
-    t = clock();
 	int		x;
 	int		y;
 
@@ -130,18 +118,10 @@ void	display(t_data *d)
 		x = 0;
 		while (x < WINDOW_X)
 		{
-			// pthread_t ray;
-			// ret = pthread_create(ray, NULL, raytracing_aliasing, datas);
-			// pthread_mutex_lock(&mutex);
-			// pthread_mutex_t		mutex;
 			raytracing_aliasing(d, x, y);
 			x += d->qrender;
 		}
 		y += d->qrender;
 	}
-  	t = clock() - t;
-    double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds
- 
-    printf("fun() took %f seconds to execute \n", time_taken);
 	ft_putstr("Done !\n");
 }

@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/21 23:32:02 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/05/19 07:02:01 by pgallois         ###   ########.fr       */
+/*   Updated: 2015/05/29 14:19:06 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,6 @@ int			parse(t_data *d)
 
 void		init(t_data *d)
 {
-	int		i;
-
-	i = -1;
 	d->img = ft_memalloc(1000);
 	d->vec = ft_memalloc(1000);
 	d->objet = ft_memalloc(1000);
@@ -86,8 +83,7 @@ void		init(t_data *d)
 	d->lray.dir = ft_vec(0, 0, 0);
 	d->lray.start = ft_vec(0, 0, 0);
 	d->ray = ft_memalloc(sizeof(t_ray) + 1);
-	while (++i < 100)
-		d->img[i] = ft_memalloc(100);
+	d->img[0] = ft_memalloc(100);
 	background(d, d->img[0]);
 	if (parse(d) == 0)
 	{

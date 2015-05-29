@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   intersection.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pgallois <pgallois@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/02/06 20:18:32 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/05/19 06:52:03 by pgallois         ###   ########.fr       */
+/*   Created: 2014/02/06 20:18:32 by pgallois          #+#    #+#             */
+/*   Updated: 2015/05/29 14:22:19 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int		hit_sphere(t_ray *r, t_objet *p, float *t)
 	retvalue = 0;
 	assign_value_vec(vector_sub(*p->ori, *r->start), p->m_vec[0]);
 	p->tab[0] = vector_dot(*r->dir, *p->m_vec[0]);
-	p->tab[1] = p->tab[0] * p->tab[0] - vector_dot(*p->m_vec[0], *p->m_vec[0]) + p->radius * p->radius;
+	p->tab[1] = p->tab[0] * p->tab[0] - vector_dot(*p->m_vec[0], \
+			*p->m_vec[0]) + p->radius * p->radius;
 	if (p->tab[1] < 0.0f)
 		return (0);
 	p->tab[2] = p->tab[0] - sqrtf(p->tab[1]);
@@ -99,8 +100,8 @@ int		hit_cone(t_objet *p, t_ray *ray, float *t)
 	rotate_vec_axe(p->m_vec[0], p->angle);
 	p->tab[0] = powf(p->m_vec[1]->x, 2.0f) + powf(p->m_vec[1]->y, 2.0f)
 		- p->tab[5] * powf(p->m_vec[1]->z, 2.0f);
-	p->tab[1] = p->m_vec[0]->x * p->m_vec[1]->x + p->m_vec[0]->y * p->m_vec[1]->y
-		- p->tab[5] * p->m_vec[0]->z * p->m_vec[1]->z;
+	p->tab[1] = p->m_vec[0]->x * p->m_vec[1]->x + p->m_vec[0]->y * \
+		p->m_vec[1]->y - p->tab[5] * p->m_vec[0]->z * p->m_vec[1]->z;
 	p->tab[1] = p->tab[1] * 2.0f;
 	p->tab[2] = powf(p->m_vec[0]->x, 2.0f) + powf(p->m_vec[0]->y, 2)
 		- p->tab[5] * powf(p->m_vec[0]->z, 2);
@@ -130,4 +131,3 @@ int		hit_cylinder(t_objet *p, t_ray *ray, float *t)
 	p->tab[5] = (p->normal_ext->z == 1.0) ? 0 : 1;
 	return (hit_cylinder2(p->tab, p->m_vec, p, t));
 }
-

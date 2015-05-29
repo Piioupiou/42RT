@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pgallois <pgallois@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/12/31 00:49:38 by acrosnie          #+#    #+#             */
-/*   Updated: 2015/05/19 03:53:26 by pgallois         ###   ########.fr       */
+/*   Created: 2013/12/31 00:49:38 by pgallois          #+#    #+#             */
+/*   Updated: 2015/05/29 15:29:37 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ typedef struct		s_ray
 
 typedef struct		s_objet
 {
-	float 			tab[36];
+	float			tab[36];
 	t_vec			**m_vec;
 	t_vec			*normal_ext;
 	t_vec			*point;
@@ -86,15 +86,15 @@ typedef struct		s_camera
 
 typedef struct		s_option
 {
-	int 	level;
-	int 	level_max;
-	float 	coef;
-	int 	activate_reflection;
-	int 	activate_antialiasing;
-	int 	activate_light;
-	int     activate_shadow;	
-	int 	activate_gama;
-	int     activate_exposure;
+	int				level;
+	int				level_max;
+	float			coef;
+	int				activate_reflection;
+	int				activate_antialiasing;
+	int				activate_light;
+	int				activate_shadow;
+	int				activate_gama;
+	int				activate_exposure;
 }					t_option;
 
 typedef struct		s_data
@@ -144,7 +144,9 @@ typedef struct		s_rot
 	float			zy;
 }					t_rot;
 
-void 				create_vec(t_data *d, int number);
+void				interface(t_data *d);
+void				option_normal(t_data *d);
+void				create_vec(t_data *d, int number);
 void				free_all(t_data *d);
 int					get_next_line(int const fd, char **line);
 void				ft_putendl(char const *s);
@@ -179,6 +181,7 @@ void				background(t_data *data, t_new_img *b);
 void				init(t_data *d);
 int					parse(t_data *d);
 
+void				color_assigne(t_color *c, float r, float g, float b);
 float				ft_min(float a, float b);
 float				ft_max(float a, float b);
 void				pixel_put(t_new_img *img, int x, int y, t_color *color);
@@ -196,7 +199,7 @@ t_vec				vector_dot_float(float c, t_vec v1);
 t_vec				*negative(t_vec *v1);
 t_vec				*cross_product(t_vec *v1, t_vec *v2);
 t_vec				*vector_divise_float(float c, t_vec *v1);
-void 				assign_value_vec(t_vec vec1, t_vec *vec2);
+void				assign_value_vec(t_vec vec1, t_vec *vec2);
 int					hit_cone(t_objet *p, t_ray *ray, float *t);
 int					hit_plane(t_objet *p, t_ray *ray, float *t);
 int					hit_sphere(t_ray *r, t_objet *s, float *t);

@@ -6,7 +6,7 @@
 /*   By: acrosnie <acrosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/04 22:30:34 by acrosnie          #+#    #+#             */
-/*   Updated: 2014/02/14 11:43:53 by acrosnie         ###   ########.fr       */
+/*   Updated: 2015/05/29 14:47:34 by pgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,6 @@ t_vec	*negative(t_vec *v1)
 	return (v1);
 }
 
-float	magnitude(t_vec *v)
-{
-	return (sqrt((v->x * v->x) + (v->y * v->y) + (v->z * v->z)));
-}
-
 float	vector_dot(t_vec a, t_vec b)
 {
 	return ((a.x * b.x) + (a.y * b.y) + (a.z * b.z));
@@ -51,7 +46,7 @@ t_vec	vector_dot_float(float c, t_vec v1)
 	return (v);
 }
 
-void assign_value_vec(t_vec vec1, t_vec *vec2)
+void	assign_value_vec(t_vec vec1, t_vec *vec2)
 {
 	vec2->x = vec1.x;
 	vec2->y = vec1.y;
